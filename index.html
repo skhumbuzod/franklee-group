@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Franklee Group | South Africa's Integrated Logistics Group</title>
+  <meta name="description" content="Franklee Group is South Africa's integrated logistics and supply chain group — fleet washing, warehousing, supply chain consultancy, and the Franklee Loop backhaul exchange. Gauteng-anchored. Nationally connected." />
+  <meta name="keywords" content="Franklee Group, logistics South Africa, truck wash, warehousing, supply chain consultancy, backhaul exchange, Franklee Loop, Gauteng logistics" />
+  <meta property="og:title" content="Franklee Group | We Keep Your Freight Moving" />
+  <meta property="og:description" content="South Africa's integrated logistics group — fleet washing, warehousing, supply chain consultancy, and backhaul exchange. One partner, every kilometre." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/hero-bg.jpg" />
+  <meta name="theme-color" content="#060914" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS
+    ============================================================ */
+    :root {
+      --bg-deep:        #060914;
+      --bg-dark:        #0C0F1E;
+      --bg-card:        rgba(255,255,255,0.04);
+      --orange:         #F05A1A;
+      --orange-glow:    rgba(240,90,26,0.25);
+      --orange-soft:    #FF7A40;
+      --gold:           #C9A84C;
+      --white:          #FFFFFF;
+      --text-muted:     rgba(255,255,255,0.55);
+      --border:         rgba(255,255,255,0.07);
+      --nav-h:          72px;
+      --radius-lg:      16px;
+      --radius-md:      10px;
+      --transition:     cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { background: var(--bg-deep); color: var(--white); font-family: 'Inter', sans-serif; line-height: 1.65; overflow-x: hidden; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    ::selection { background: var(--orange); color: var(--white); }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 4px; }
+
+    /* ============================================================
+       TYPOGRAPHY
+    ============================================================ */
+    .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; }
+    .mono  { font-family: 'IBM Plex Mono', monospace; }
+
+    .eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 28px; height: 2px;
+      background: var(--orange);
+      flex-shrink: 0;
+    }
+
+    /* ============================================================
+       LAYOUT
+    ============================================================ */
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 2rem; }
+
+    /* ============================================================
+       SCROLL REVEAL
+    ============================================================ */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--transition), transform 0.8s var(--transition); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn-orange {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.6rem;
+      background: var(--orange); color: var(--white);
+      font-weight: 700; font-size: 0.9rem;
+      border-radius: 6px; letter-spacing: 0.04em;
+      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+      border: none; cursor: pointer; white-space: nowrap;
+    }
+    .btn-orange:hover { background: var(--orange-soft); transform: translateY(-2px); box-shadow: 0 10px 32px rgba(240,90,26,0.45); }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.6rem;
+      border: 1.5px solid rgba(255,255,255,0.35);
+      color: var(--white); font-weight: 600; font-size: 0.9rem;
+      border-radius: 6px; letter-spacing: 0.04em;
+      transition: border-color 0.25s, background 0.25s, transform 0.2s; cursor: pointer;
+    }
+    .btn-outline:hover { border-color: var(--orange); background: rgba(240,90,26,0.08); transform: translateY(-2px); }
+
+    .btn-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-weight: 700; font-size: 0.875rem;
+      color: var(--orange); letter-spacing: 0.04em;
+      transition: gap 0.2s;
+    }
+    .btn-link:hover { gap: 0.8rem; }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    #nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: var(--nav-h);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      background: rgba(6,9,20,0.82);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    #nav.scrolled { background: rgba(6,9,20,0.97); box-shadow: 0 4px 40px rgba(0,0,0,0.5); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.45rem; letter-spacing: 0.08em;
+      color: var(--white); flex-shrink: 0;
+    }
+    .nav-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+
+    .nav-links { display: flex; align-items: center; gap: 2.2rem; }
+    .nav-links a {
+      font-size: 0.875rem; font-weight: 500; color: rgba(255,255,255,0.75);
+      position: relative; transition: color 0.25s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px; background: var(--orange); transition: width 0.3s var(--transition);
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; padding: 4px; background: none; border: none;
+    }
+    .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-mobile {
+      position: fixed; top: var(--nav-h); left: 0; right: 0;
+      background: rgba(6,9,20,0.97); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      max-height: 0; overflow: hidden; transition: max-height 0.4s var(--transition), padding 0.4s;
+      z-index: 999;
+    }
+    .nav-mobile.open { max-height: 380px; padding: 1.5rem 0; }
+    .nav-mobile a {
+      display: block; padding: 0.85rem 2rem; font-size: 1rem; font-weight: 500;
+      color: rgba(255,255,255,0.8); border-bottom: 1px solid var(--border); transition: color 0.2s, padding-left 0.2s;
+    }
+    .nav-mobile a:hover { color: var(--orange); padding-left: 2.5rem; }
+    .nav-mobile .btn-orange { margin: 1rem 2rem 0; width: calc(100% - 4rem); justify-content: center; }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    #hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: url('assets/hero-bg.jpg') center center / cover no-repeat;
+      transform: scale(1.05);
+      animation: heroBgDrift 20s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    @keyframes heroBgDrift {
+      from { transform: scale(1.05) translateX(0); }
+      to   { transform: scale(1.12) translateX(-25px); }
+    }
+    .hero-overlay-base { position: absolute; inset: 0; background: rgba(6,9,20,0.62); }
+    .hero-overlay-gradient {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, #060914 0%, rgba(6,9,20,0.88) 28%, rgba(6,9,20,0.25) 62%, rgba(6,9,20,0.08) 100%);
+    }
+    .hero-overlay-vignette {
+      position: absolute; top: 0; left: 0; right: 0; height: 280px;
+      background: linear-gradient(to bottom, rgba(240,90,26,0.1) 0%, transparent 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      padding-top: calc(var(--nav-h) + 60px);
+      display: flex; flex-direction: column; justify-content: flex-end; flex: 1;
+    }
+    .hero-inner { padding-bottom: 110px; }
+
+    .hero-tag {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.25em; text-transform: uppercase; color: var(--orange);
+      margin-bottom: 1.4rem; display: flex; align-items: center; gap: 0.75rem;
+      opacity: 0; animation: fadeUp 0.7s 0.2s var(--transition) forwards;
+    }
+    .tag-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--orange);
+      animation: tagPulse 1.8s infinite;
+    }
+    @keyframes tagPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(240,90,26,0.6); }
+      50%       { box-shadow: 0 0 0 8px rgba(240,90,26,0); }
+    }
+
+    .hero-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 8.5vw, 9.5rem);
+      line-height: 0.92; letter-spacing: 0.02em; margin-bottom: 1.6rem; overflow: hidden;
+    }
+    .hero-headline .line { display: block; overflow: hidden; }
+    .hero-headline .line-inner {
+      display: block; opacity: 0; transform: translateY(110%);
+      animation: slideUp 0.85s var(--transition) forwards;
+    }
+    .hero-headline .line:nth-child(1) .line-inner { animation-delay: 0.4s; }
+    .hero-headline .line:nth-child(2) .line-inner { animation-delay: 0.62s; }
+    .hero-headline .orange { color: var(--orange); }
+
+    .hero-sub {
+      max-width: 620px; font-size: 1.05rem; color: rgba(255,255,255,0.72);
+      line-height: 1.75; margin-bottom: 2.5rem;
+      opacity: 0; animation: fadeUp 0.8s 0.9s var(--transition) forwards;
+    }
+    .hero-ctas {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp 0.8s 1.1s var(--transition) forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(110%); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .scroll-chevron {
+      position: absolute; bottom: 120px; right: 2rem; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+      opacity: 0; animation: fadeUp 1s 1.5s var(--transition) forwards; cursor: pointer;
+    }
+    .scroll-chevron span {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; letter-spacing: 0.2em;
+      color: var(--text-muted); writing-mode: vertical-rl; text-orientation: mixed; margin-bottom: 0.5rem;
+    }
+    .scroll-chevron svg { width: 20px; height: 20px; animation: bounceDown 1.6s ease-in-out infinite; color: var(--orange); }
+    @keyframes bounceDown {
+      0%, 100% { transform: translateY(0); opacity: 0.65; }
+      50%       { transform: translateY(9px); opacity: 1; }
+    }
+
+    .ticker-wrap {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+      height: 48px; background: rgba(240,90,26,0.1); border-top: 1px solid rgba(240,90,26,0.2);
+      backdrop-filter: blur(10px); overflow: hidden; display: flex; align-items: center;
+    }
+    .ticker-track {
+      display: flex; align-items: center; white-space: nowrap;
+      animation: tickerScroll 28s linear infinite;
+    }
+    .ticker-track span {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.55); padding: 0 2rem;
+    }
+    .ticker-track .sep { color: var(--orange); padding: 0 0.4rem; }
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ============================================================
+       THESIS STRIP
+    ============================================================ */
+    #thesis {
+      background: var(--bg-dark); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 90px 0; position: relative; overflow: hidden;
+    }
+    #thesis::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 1px; background: linear-gradient(90deg, transparent, var(--orange), transparent);
+    }
+    .thesis-headline {
+      text-align: center; font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5.8rem); letter-spacing: 0.12em; margin-bottom: 4rem;
+    }
+    .thesis-headline::after { content: ''; display: block; width: 80px; height: 3px; background: var(--orange); margin: 1rem auto 0; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2px; }
+    .stat-item { text-align: center; padding: 2.5rem 1rem; position: relative; }
+    .stat-item::before { content: ''; position: absolute; right: 0; top: 20%; bottom: 20%; width: 1px; background: var(--border); }
+    .stat-item:last-child::before { display: none; }
+    .stat-num { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem,6vw,5.5rem); line-height: 1; color: var(--orange); display: block; letter-spacing: 0.02em; }
+    .stat-label { display: block; font-size: 0.8rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.6rem; font-weight: 500; }
+
+    /* ============================================================
+       DIVISIONS
+    ============================================================ */
+    #divisions { background: var(--bg-deep); padding: 120px 0; }
+    .divisions-header { margin-bottom: 4rem; }
+    .divisions-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.6rem,4.5vw,4.2rem); line-height: 1.05; letter-spacing: 0.04em; }
+
+    .cards-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 1.5px; background: var(--border); border: 1px solid var(--border);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0; overflow: hidden;
+    }
+    .div-card {
+      background: var(--bg-card); padding: 2.5rem; position: relative; overflow: hidden;
+      cursor: default; transition: background 0.35s, transform 0.35s var(--transition);
+      transform-style: preserve-3d;
+    }
+    .div-card::before {
+      content: ''; position: absolute; inset: 0;
+      border: 1px solid transparent; transition: border-color 0.35s, box-shadow 0.35s;
+      pointer-events: none; z-index: 1;
+    }
+    .div-card:hover { background: rgba(255,255,255,0.07); transform: translateY(-8px); z-index: 2; }
+    .div-card:hover::before { border-color: rgba(240,90,26,0.5); box-shadow: inset 0 0 40px rgba(240,90,26,0.07), 0 20px 60px rgba(0,0,0,0.6); }
+
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      background: rgba(240,90,26,0.1); border: 1px solid rgba(240,90,26,0.18);
+      display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .div-card:hover .card-icon { background: rgba(240,90,26,0.2); border-color: rgba(240,90,26,0.5); }
+    .card-icon svg { width: 26px; height: 26px; color: var(--orange); }
+
+    .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 0.05em; color: var(--white); margin-bottom: 0.75rem; }
+    .card-desc { font-size: 0.875rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.5rem; }
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 0.3rem 0.7rem;
+      border: 1px solid var(--border); border-radius: 100px; color: var(--text-muted);
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .div-card:hover .tag { border-color: rgba(240,90,26,0.3); color: rgba(255,255,255,0.75); }
+
+    /* Featured card */
+    .featured-wrap {
+      background: var(--border); border: 1px solid var(--border);
+      border-top: 1.5px solid var(--border); border-radius: 0 0 var(--radius-lg) var(--radius-lg); overflow: hidden;
+      margin-top: 1.5px;
+    }
+    .div-card-featured {
+      background: linear-gradient(135deg, rgba(240,90,26,0.09) 0%, rgba(12,15,30,0.97) 55%);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg); position: relative;
+    }
+    .div-card-featured::after {
+      content: ''; position: absolute; top: -100px; right: -100px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(240,90,26,0.16) 0%, transparent 65%);
+      animation: glowPulse 3.5s ease-in-out infinite; pointer-events: none;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50%       { opacity: 1; transform: scale(1.18); }
+    }
+
+    .loop-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 0.35rem 0.8rem;
+      background: rgba(240,90,26,0.12); border: 1px solid rgba(240,90,26,0.45);
+      border-radius: 100px; color: var(--orange-soft); margin-bottom: 1rem;
+    }
+    .loop-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); animation: tagPulse 1.5s infinite; }
+
+    .featured-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+
+    .featured-metrics { display: flex; gap: 2rem; margin: 1.5rem 0; flex-wrap: wrap; }
+    .metric { display: flex; flex-direction: column; gap: 0.2rem; }
+    .metric-val { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; line-height: 1; color: var(--orange); letter-spacing: 0.02em; }
+    .metric-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+
+    /* ============================================================
+       LOOP FEATURE
+    ============================================================ */
+    #loop-feature {
+      background: var(--bg-dark); padding: 120px 0; border-top: 1px solid var(--border);
+      overflow: hidden; position: relative;
+    }
+    #loop-feature::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 900px 700px at 15% 50%, rgba(240,90,26,0.055) 0%, transparent 58%);
+      pointer-events: none;
+    }
+    .loop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+
+    .route-svg-wrap {
+      background: rgba(255,255,255,0.025); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2rem; margin-bottom: 1.5rem; position: relative; overflow: hidden;
+    }
+    .route-svg-wrap::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 200px 200px at 50% 50%, rgba(240,90,26,0.04) 0%, transparent 70%);
+    }
+    .route-svg { width: 100%; height: auto; overflow: visible; }
+    .route-city-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; fill: rgba(255,255,255,0.5); letter-spacing: 0.1em; }
+    .route-line { fill: none; stroke: rgba(240,90,26,0.2); stroke-width: 1.5; stroke-dasharray: 5 5; }
+    .route-line-active { fill: none; stroke: var(--orange); stroke-width: 2; stroke-dasharray: 350; stroke-dashoffset: 350; }
+    .route-line-active.animated { animation: drawLine 3.5s ease-in-out infinite; }
+    @keyframes drawLine { 0% { stroke-dashoffset: 350; } 75% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; } }
+
+    .loop-economics { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+    .econ-card {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 1.25rem 1rem; text-align: center;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .econ-card:hover { border-color: rgba(240,90,26,0.4); background: rgba(240,90,26,0.05); }
+    .econ-val { font-family: 'Bebas Neue', sans-serif; font-size: 1.9rem; color: var(--orange); letter-spacing: 0.02em; line-height: 1; }
+    .econ-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'IBM Plex Mono', monospace; }
+
+    .loop-steps { list-style: none; }
+    .loop-step {
+      display: flex; gap: 1.25rem; padding: 1.4rem; border-radius: var(--radius-md);
+      cursor: default; transition: background 0.3s, transform 0.25s; border: 1px solid transparent; margin-bottom: 0.65rem;
+    }
+    .loop-step:hover { background: rgba(255,255,255,0.04); border-color: rgba(240,90,26,0.2); transform: translateX(6px); }
+    .step-num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem;
+      color: rgba(240,90,26,0.25); line-height: 1; flex-shrink: 0; width: 2rem; text-align: center; transition: color 0.3s;
+    }
+    .loop-step:hover .step-num { color: var(--orange); }
+    .step-title { font-weight: 700; font-size: 0.95rem; color: var(--white); margin-bottom: 0.3rem; }
+    .step-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.65; }
+
+    /* ============================================================
+       CAPABILITIES
+    ============================================================ */
+    #capabilities { background: var(--bg-deep); padding: 120px 0; border-top: 1px solid var(--border); }
+    .cap-header { text-align: center; margin-bottom: 5rem; }
+    .cap-header h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.4rem,4.5vw,4rem); letter-spacing: 0.06em; }
+    .cap-header p { font-size: 1rem; color: var(--text-muted); max-width: 560px; margin: 1rem auto 0; }
+
+    .cap-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.5rem; }
+    .cap-card {
+      padding: 2.5rem 2rem; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: var(--radius-lg);
+      transition: border-color 0.35s, transform 0.35s var(--transition), box-shadow 0.35s;
+      position: relative; overflow: hidden;
+    }
+    .cap-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform 0.4s var(--transition);
+    }
+    .cap-card:hover { border-color: rgba(240,90,26,0.28); transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.5); }
+    .cap-card:hover::after { transform: scaleX(1); }
+    .cap-icon { width: 48px; height: 48px; margin-bottom: 1.5rem; color: var(--orange); }
+    .cap-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+    .cap-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    #contact { position: relative; padding: 140px 0; overflow: hidden; }
+    .contact-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #1c0a00 0%, #0d0308 35%, var(--bg-dark) 70%, var(--bg-deep) 100%);
+    }
+    .contact-glow {
+      position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 700px;
+      background: radial-gradient(ellipse, rgba(240,90,26,0.18) 0%, transparent 55%); pointer-events: none;
+    }
+    .contact-inner { position: relative; z-index: 1; text-align: center; }
+    .contact-inner h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.8rem,6vw,5.8rem); letter-spacing: 0.04em; line-height: 1.05; margin-bottom: 1.25rem; }
+    .contact-inner p { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 3rem; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .contact-btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; }
+    .btn-whatsapp {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.95rem 2rem; background: #25D366; color: white;
+      font-weight: 700; font-size: 0.95rem; border-radius: 6px; letter-spacing: 0.04em;
+      transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+    }
+    .btn-whatsapp:hover { background: #1db954; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(37,211,102,0.35); }
+    .btn-email {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.95rem 2rem; border: 1.5px solid rgba(255,255,255,0.25);
+      color: var(--white); font-weight: 600; font-size: 0.95rem;
+      border-radius: 6px; letter-spacing: 0.04em; transition: border-color 0.25s, background 0.25s, transform 0.2s;
+    }
+    .btn-email:hover { border-color: var(--white); background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+    .contact-fine { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; }
+    .contact-fine a { color: rgba(255,255,255,0.6); transition: color 0.2s; }
+    .contact-fine a:hover { color: var(--orange); }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    #footer { background: #030508; border-top: 1px solid var(--border); padding: 80px 0 0; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; padding-bottom: 4rem; border-bottom: 1px solid var(--border); }
+    .footer-brand .nav-logo { margin-bottom: 1rem; }
+    .footer-tagline { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; max-width: 280px; margin-bottom: 1.5rem; }
+    .footer-location { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(240,90,26,0.65); display: flex; align-items: center; gap: 0.4rem; }
+    .footer-location svg { width: 12px; height: 12px; }
+    .footer-col h4 { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 1.25rem; }
+    .footer-col ul li { margin-bottom: 0.65rem; }
+    .footer-col ul li a { font-size: 0.875rem; color: var(--text-muted); transition: color 0.2s, padding-left 0.2s; display: inline-block; }
+    .footer-col ul li a:hover { color: var(--white); padding-left: 4px; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 0; }
+    .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.28); }
+    .footer-loop-link { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--orange); opacity: 0.6; transition: opacity 0.2s; }
+    .footer-loop-link:hover { opacity: 1; }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 1100px) {
+      .cap-grid { grid-template-columns: repeat(2,1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 3rem; }
+    }
+    @media (max-width: 900px) {
+      .stats-grid { grid-template-columns: repeat(2,1fr); }
+      .stat-item::before { display: none; }
+      .stat-item { border-bottom: 1px solid var(--border); }
+      .cards-grid { grid-template-columns: 1fr; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+      .featured-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .loop-grid { grid-template-columns: 1fr; gap: 3rem; }
+    }
+    @media (max-width: 768px) {
+      #divisions, #loop-feature, #capabilities, #contact { padding: 80px 0; }
+      .nav-links, .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+      .hero-headline { font-size: clamp(3rem,11vw,5rem); }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
+      .cap-grid { grid-template-columns: 1fr; }
+      .loop-economics { grid-template-columns: repeat(3,1fr); }
+    }
+    @media (max-width: 480px) {
+      .container { padding: 0 1.25rem; }
+      .hero-ctas { flex-direction: column; }
+      .contact-btns { flex-direction: column; align-items: center; }
+      .loop-economics { grid-template-columns: 1fr; }
+      .featured-metrics { gap: 1rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ===================== NAV ===================== -->
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="Franklee Group home">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M8 32 L20 8 L32 32" fill="none" stroke="#F05A1A" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+          <path d="M13 22 L27 22" fill="none" stroke="#F05A1A" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+        </svg>
+        FRANKLEE GROUP
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="#divisions">Divisions</a></li>
+        <li><a href="#loop-feature">Franklee Loop</a></li>
+        <li><a href="#capabilities">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="#contact" class="btn-orange nav-cta">Get Started</a>
+      <button class="nav-hamburger" id="hamburgerBtn" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="nav-mobile" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+  <a href="#divisions" class="mobile-link">Divisions</a>
+  <a href="#loop-feature" class="mobile-link">Franklee Loop</a>
+  <a href="#capabilities" class="mobile-link">About</a>
+  <a href="#contact" class="mobile-link">Contact</a>
+  <a href="#contact" class="btn-orange">Get Started</a>
+</div>
+
+
+<!-- ===================== HERO ===================== -->
+<section id="hero" aria-label="Hero — Franklee Group">
+  <div class="hero-bg" role="img" aria-label="Aerial highway with freight trucks at dusk"></div>
+  <div class="hero-overlay-base"></div>
+  <div class="hero-overlay-gradient"></div>
+  <div class="hero-overlay-vignette"></div>
+
+  <div class="hero-content">
+    <div class="container">
+      <div class="hero-inner">
+        <p class="hero-tag">
+          <span class="tag-dot"></span>
+          Gauteng-Anchored &nbsp;&bull;&nbsp; Nationally Connected &nbsp;&bull;&nbsp; South Africa
+        </p>
+        <h1 class="hero-headline">
+          <span class="line"><span class="line-inner">WE KEEP YOUR</span></span>
+          <span class="line"><span class="line-inner orange">FREIGHT MOVING.</span></span>
+        </h1>
+        <p class="hero-sub">
+          South Africa's integrated logistics group — fleet washing, warehousing,
+          supply chain consultancy, and backhaul exchange.<br/>One partner, every kilometre.
+        </p>
+        <div class="hero-ctas">
+          <a href="#divisions" class="btn-orange">
+            Explore Divisions
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#loop-feature" class="btn-outline">
+            Franklee Loop
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-chevron" onclick="document.getElementById('thesis').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to content">
+    <span>SCROLL</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </div>
+
+  <div class="ticker-wrap" aria-hidden="true">
+    <div class="ticker-track" id="tickerTrack">
+      <span>Johannesburg</span><span class="sep">&#8594;</span>
+      <span>Pretoria</span><span class="sep">&#8594;</span>
+      <span>Durban</span><span class="sep">&#8594;</span>
+      <span>Cape Town</span><span class="sep">&#8594;</span>
+      <span>Gqeberha</span><span class="sep">&#8594;</span>
+      <span>Bloemfontein</span><span class="sep">&#8594;</span>
+      <span>Polokwane</span><span class="sep">&#8594;</span>
+      <span>East London</span><span class="sep">&#8594;</span>
+      <span>Rustenburg</span><span class="sep">&#8594;</span>
+      <span>Kimberley</span><span class="sep">&#8594;</span>
+      <span>Johannesburg</span><span class="sep">&#8594;</span>
+      <span>Pretoria</span><span class="sep">&#8594;</span>
+      <span>Durban</span><span class="sep">&#8594;</span>
+      <span>Cape Town</span><span class="sep">&#8594;</span>
+      <span>Gqeberha</span><span class="sep">&#8594;</span>
+      <span>Bloemfontein</span><span class="sep">&#8594;</span>
+      <span>Polokwane</span><span class="sep">&#8594;</span>
+      <span>East London</span><span class="sep">&#8594;</span>
+      <span>Rustenburg</span><span class="sep">&#8594;</span>
+      <span>Kimberley</span><span class="sep">&#8594;</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== THESIS ===================== -->
+<section id="thesis" aria-labelledby="thesis-headline">
+  <div class="container">
+    <h2 class="thesis-headline reveal" id="thesis-headline">ONE GROUP. END TO END.</h2>
+    <div class="stats-grid">
+      <div class="stat-item reveal reveal-delay-1">
+        <span class="stat-num" data-target="4" data-suffix="">4</span>
+        <span class="stat-label">Divisions</span>
+      </div>
+      <div class="stat-item reveal reveal-delay-2">
+        <span class="stat-num" data-target="5" data-suffix="+">5+</span>
+        <span class="stat-label">Key Corridors Covered</span>
+      </div>
+      <div class="stat-item reveal reveal-delay-3">
+        <span class="stat-num" data-target="67" data-suffix="%">67%</span>
+        <span class="stat-label">Deadhead Reduction</span>
+      </div>
+      <div class="stat-item reveal reveal-delay-4">
+        <span class="stat-num" data-target="10" data-suffix="%">10%</span>
+        <span class="stat-label">Only on Matched Loads</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== DIVISIONS ===================== -->
+<section id="divisions" aria-labelledby="divisions-headline">
+  <div class="container">
+    <div class="divisions-header reveal">
+      <p class="eyebrow">WHAT WE DO</p>
+      <h2 id="divisions-headline">Four divisions.<br/>One accountable group.</h2>
+    </div>
+
+    <div class="cards-grid reveal">
+      <!-- Card 1: Truck Wash -->
+      <article class="div-card" data-tilt>
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 4h13M3 8h9m-9 4h6m4 1l1.5-1.5M16 13s2 1.5 2 3.5A2.5 2.5 0 0113.5 19 2.5 2.5 0 0111 16.5c0-2 2-3.5 2-3.5"/>
+            <path d="M18 6h3v5l-1.5 1M18 6l-2-2H9"/>
+            <circle cx="7" cy="18" r="2"/>
+            <circle cx="17" cy="18" r="2"/>
+            <path d="M9 18H5a1 1 0 01-1-1V5"/>
+          </svg>
+        </div>
+        <h3 class="card-title">Truck Wash</h3>
+        <p class="card-desc">Professional heavy vehicle wash services for fleets of all sizes. We keep your trucks compliant, road-ready, and representing your brand. Fast turnaround, competitive pricing, minimal fleet downtime.</p>
+        <div class="card-tags">
+          <span class="tag">Fleet Wash</span>
+          <span class="tag">Compliance</span>
+          <span class="tag">Heavy Vehicles</span>
+          <span class="tag">Gauteng</span>
+        </div>
+      </article>
+
+      <!-- Card 2: Logistics & Warehousing -->
+      <article class="div-card" data-tilt>
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </div>
+        <h3 class="card-title">Logistics &amp; Warehousing</h3>
+        <p class="card-desc">End-to-end freight management and warehousing across South Africa's key corridors. We integrate transport, storage, and distribution under one roof — one accountable partner, no hand-off gaps.</p>
+        <div class="card-tags">
+          <span class="tag">Freight</span>
+          <span class="tag">Warehousing</span>
+          <span class="tag">Distribution</span>
+          <span class="tag">Nationwide</span>
+        </div>
+      </article>
+
+      <!-- Card 3: Consultancy -->
+      <article class="div-card" data-tilt>
+        <div class="card-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+          </svg>
+        </div>
+        <h3 class="card-title">Supply Chain Consultancy</h3>
+        <p class="card-desc">We hunt the margin leaks. Our consultants map your supply chain, identify inefficiencies, and implement data-driven solutions that translate directly into recovered cost and improved EBITDA.</p>
+        <div class="card-tags">
+          <span class="tag">Cost Recovery</span>
+          <span class="tag">TMS/WMS</span>
+          <span class="tag">Optimisation</span>
+          <span class="tag">Analytics</span>
+        </div>
+      </article>
+    </div>
+
+    <!-- Featured: Franklee Loop -->
+    <div class="featured-wrap reveal">
+      <article class="div-card div-card-featured" data-tilt>
+        <div class="featured-grid">
+          <div>
+            <div class="loop-badge">
+              <span class="dot"></span>
+              NEW &nbsp;&bull;&nbsp; BACKHAUL EXCHANGE
+            </div>
+            <div class="card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="17 1 21 5 17 9"/>
+                <path d="M3 11V9a4 4 0 014-4h14"/>
+                <polyline points="7 23 3 19 7 15"/>
+                <path d="M21 13v2a4 4 0 01-4 4H3"/>
+              </svg>
+            </div>
+            <h3 class="card-title" style="font-size:2rem;">Franklee Loop</h3>
+            <p class="card-desc" style="max-width:500px;">South Africa's backhaul exchange. Connect carriers running empty return legs with shippers who need flexible capacity — reducing deadhead kilometres and recovering revenue on loads that would otherwise run at a loss.</p>
+            <div class="featured-metrics">
+              <div class="metric"><span class="metric-val">&#8722;67%</span><span class="metric-lbl">Deadhead km</span></div>
+              <div class="metric"><span class="metric-val">R7.8k</span><span class="metric-lbl">Avg Recovered</span></div>
+              <div class="metric"><span class="metric-val">10%</span><span class="metric-lbl">Fee on Match</span></div>
+            </div>
+            <a href="./loop/index.html" class="btn-link">
+              Explore Loop
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+          <div>
+            <div class="card-tags" style="margin-bottom:1.5rem;">
+              <span class="tag">Backhaul Exchange</span>
+              <span class="tag">Revenue Recovery</span>
+              <span class="tag">Carrier Network</span>
+              <span class="tag">Real-Time Matching</span>
+            </div>
+            <div style="background:rgba(255,255,255,0.025);border:1px solid rgba(240,90,26,0.15);border-radius:12px;padding:1.5rem;">
+              <p style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem;">WHY IT MATTERS</p>
+              <ul style="list-style:none;display:flex;flex-direction:column;gap:0.75rem;">
+                <li style="display:flex;gap:0.75rem;align-items:flex-start;font-size:0.85rem;color:rgba(255,255,255,0.65);">
+                  <svg style="width:15px;height:15px;flex-shrink:0;margin-top:3px;color:var(--orange)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Empty trucks run every day on SA's busiest corridors — that's pure margin destruction.
+                </li>
+                <li style="display:flex;gap:0.75rem;align-items:flex-start;font-size:0.85rem;color:rgba(255,255,255,0.65);">
+                  <svg style="width:15px;height:15px;flex-shrink:0;margin-top:3px;color:var(--orange)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Franklee Loop matches return-leg capacity with shippers needing flexible freight.
+                </li>
+                <li style="display:flex;gap:0.75rem;align-items:flex-start;font-size:0.85rem;color:rgba(255,255,255,0.65);">
+                  <svg style="width:15px;height:15px;flex-shrink:0;margin-top:3px;color:var(--orange)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Carriers earn on runs they'd otherwise lose. Shippers save on spot rates.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== LOOP FEATURE ===================== -->
+<section id="loop-feature" aria-labelledby="loop-headline">
+  <div class="container">
+    <div class="loop-grid">
+
+      <!-- Left: Viz -->
+      <div class="loop-viz reveal">
+        <p class="eyebrow">FRANKLEE LOOP &nbsp;&bull;&nbsp; BACKHAUL EXCHANGE</p>
+        <h2 id="loop-headline" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,4.5vw,4rem);letter-spacing:0.04em;line-height:1.05;margin-bottom:1.25rem;">
+          Close the loop on<br/>every empty kilometre.
+        </h2>
+        <p style="font-size:0.9rem;color:var(--text-muted);line-height:1.75;margin-bottom:2rem;max-width:480px;">We keep your freight moving — and your margins recovered. The Franklee Loop backhaul exchange connects carriers with return-leg capacity to shippers across South Africa's key freight corridors.</p>
+
+        <!-- SVG Route Viz -->
+        <div class="route-svg-wrap">
+          <svg class="route-svg" viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" aria-label="Animated route map from Gauteng through South Africa">
+            <!-- Grid -->
+            <line x1="0" y1="50"  x2="460" y2="50"  stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+            <line x1="0" y1="100" x2="460" y2="100" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+            <line x1="0" y1="150" x2="460" y2="150" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+            <line x1="115" y1="0" x2="115" y2="200" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+            <line x1="230" y1="0" x2="230" y2="200" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+            <line x1="345" y1="0" x2="345" y2="200" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+
+            <!-- Defs -->
+            <defs>
+              <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+                <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="softglow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- Background route lines (dashed) -->
+            <path d="M 115,75 C 170,58 275,68 340,82" class="route-line"/>
+            <path d="M 112,82 C 145,112 180,132 208,142" class="route-line" opacity="0.5"/>
+            <path d="M 205,145 C 180,152 130,162 82,165" class="route-line" opacity="0.4"/>
+            <path d="M 344,87 C 360,118 370,138 370,155" class="route-line" opacity="0.4"/>
+
+            <!-- Active animated route: GP to DBN -->
+            <path id="activeRoute" d="M 115,75 C 170,58 275,68 340,82" class="route-line-active"/>
+
+            <!-- City nodes -->
+            <g>
+              <circle cx="115" cy="75" r="6" fill="var(--orange)" opacity="0.95" filter="url(#glow)"/>
+              <circle cx="115" cy="75" r="12" fill="none" stroke="var(--orange)" stroke-width="1" opacity="0.25"/>
+              <text x="115" y="56" class="route-city-label" text-anchor="middle">GAUTENG</text>
+            </g>
+            <g>
+              <circle cx="340" cy="82" r="5" fill="var(--orange)" opacity="0.75" filter="url(#softglow)"/>
+              <circle cx="340" cy="82" r="10" fill="none" stroke="var(--orange)" stroke-width="1" opacity="0.2"/>
+              <text x="340" y="65" class="route-city-label" text-anchor="middle">DURBAN</text>
+            </g>
+            <g>
+              <circle cx="208" cy="142" r="4" fill="#C9A84C" opacity="0.75"/>
+              <text x="208" y="160" class="route-city-label" text-anchor="middle" fill="rgba(201,168,76,0.65)">BLOEM</text>
+            </g>
+            <g>
+              <circle cx="82" cy="165" r="4" fill="var(--orange)" opacity="0.6"/>
+              <text x="82" y="180" class="route-city-label" text-anchor="middle">CAPE TOWN</text>
+            </g>
+            <g>
+              <circle cx="372" cy="155" r="3.5" fill="rgba(255,255,255,0.4)"/>
+              <text x="372" y="173" class="route-city-label" text-anchor="middle" font-size="9">GQEBERHA</text>
+            </g>
+
+            <!-- Moving truck dot -->
+            <g id="truckGroup">
+              <circle r="7" fill="var(--orange)" filter="url(#glow)"/>
+              <circle r="3.5" fill="white"/>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Economics -->
+        <div class="loop-economics">
+          <div class="econ-card">
+            <div class="econ-val">&#8722;67%</div>
+            <div class="econ-label">Deadhead</div>
+          </div>
+          <div class="econ-card">
+            <div class="econ-val">R7.8k</div>
+            <div class="econ-label">Avg Recovered</div>
+          </div>
+          <div class="econ-card">
+            <div class="econ-val">10%</div>
+            <div class="econ-label">Fee on Match</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Steps -->
+      <div class="reveal reveal-delay-2">
+        <p class="eyebrow" style="margin-bottom:2rem;">HOW IT WORKS</p>
+        <ol class="loop-steps">
+          <li class="loop-step">
+            <span class="step-num">01</span>
+            <div class="step-content">
+              <h4 class="step-title">Post Your Return Leg</h4>
+              <p class="step-desc">Carriers with empty return capacity log their route, load specs, and availability window. No upfront cost — you only pay when matched.</p>
+            </div>
+          </li>
+          <li class="loop-step">
+            <span class="step-num">02</span>
+            <div class="step-content">
+              <h4 class="step-title">Shippers Request Capacity</h4>
+              <p class="step-desc">Businesses needing flexible freight capacity browse available return-leg trucks on their required corridor and request a match.</p>
+            </div>
+          </li>
+          <li class="loop-step">
+            <span class="step-num">03</span>
+            <div class="step-content">
+              <h4 class="step-title">Franklee Confirms the Match</h4>
+              <p class="step-desc">Our team confirms compatibility, rate, and timing. We handle the coordination so both parties can focus on operations — not admin.</p>
+            </div>
+          </li>
+          <li class="loop-step">
+            <span class="step-num">04</span>
+            <div class="step-content">
+              <h4 class="step-title">Revenue Recovered, Loop Closed</h4>
+              <p class="step-desc">Carrier earns on a run that was previously dead cost. Shipper saves on spot rates. Franklee charges 10% on the matched load value — success-only.</p>
+            </div>
+          </li>
+        </ol>
+        <div style="margin-top:2rem;">
+          <a href="./loop/index.html" class="btn-orange" style="font-size:0.95rem;padding:0.9rem 2rem;">
+            Join the Pilot
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin-top:1rem;font-family:'IBM Plex Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;">Pilot launching Q3 2026 &nbsp;&bull;&nbsp; Gauteng corridors first</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== CAPABILITIES ===================== -->
+<section id="capabilities" aria-labelledby="cap-headline">
+  <div class="container">
+    <div class="cap-header reveal">
+      <p class="eyebrow" style="justify-content:center;">WHY FRANKLEE</p>
+      <h2 id="cap-headline">Built for South African<br/>freight realities.</h2>
+      <p>We don't import generic solutions. We operate on the corridors we serve, understand the pressures our clients face, and build supply chains that actually perform under SA conditions.</p>
+    </div>
+    <div class="cap-grid">
+
+      <div class="cap-card reveal reveal-delay-1" data-tilt>
+        <svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        <h3 class="cap-title">Corridor Depth</h3>
+        <p class="cap-desc">GP&#8211;DBN, GP&#8211;CPT, GP&#8211;PE, GP&#8211;Bloem, and the Eastern Cape loop. We know these routes intimately — the fuel stops, the weighbridges, the congestion windows. That knowledge is your advantage.</p>
+      </div>
+
+      <div class="cap-card reveal reveal-delay-2" data-tilt>
+        <svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="2" y="3" width="7" height="7" rx="1"/><rect x="15" y="3" width="7" height="7" rx="1"/>
+          <rect x="2" y="14" width="7" height="7" rx="1"/><rect x="15" y="14" width="7" height="7" rx="1"/>
+          <path d="M9 6.5h2a2 2 0 012 2v.5m0 0v.5a2 2 0 002 2h2M13 9v3"/>
+        </svg>
+        <h3 class="cap-title">Systems Integration</h3>
+        <p class="cap-desc">TMS and WMS that actually talk to each other. We integrate your transport management with warehouse operations so you have a single source of truth — not three spreadsheets and a WhatsApp group.</p>
+      </div>
+
+      <div class="cap-card reveal reveal-delay-3" data-tilt>
+        <svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+        </svg>
+        <h3 class="cap-title">Cost Discipline</h3>
+        <p class="cap-desc">We hunt the margin leaks. Fuel, empty kilometres, detention time, inefficient load factors — we measure, model, and eliminate each one. Your P&amp;L sees the difference inside 90 days.</p>
+      </div>
+
+      <div class="cap-card reveal reveal-delay-4" data-tilt>
+        <svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+        <h3 class="cap-title">End-to-End Accountability</h3>
+        <p class="cap-desc">One partner. One number to call. From fleet wash to final mile, from warehouse intake to supply chain redesign — Franklee Group owns the outcome. No finger-pointing across providers.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" aria-labelledby="contact-headline">
+  <div class="contact-bg"></div>
+  <div class="contact-glow"></div>
+  <div class="container">
+    <div class="contact-inner reveal">
+      <p class="eyebrow" style="justify-content:center;">LET'S TALK</p>
+      <h2 id="contact-headline">Let's move your supply<br/>chain forward.</h2>
+      <p>Whether you need a fleet wash programme, a logistics partner, supply chain surgery, or a seat at the Franklee Loop pilot — we want to hear from you.</p>
+      <div class="contact-btns">
+        <a href="https://wa.me/27000000000?text=Hello%20Franklee%20Group%2C%20I%27d%20like%20to%20discuss%20your%20services." class="btn-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Message Franklee Group on WhatsApp">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          WhatsApp Us
+        </a>
+        <a href="mailto:skhumbuzomadiba@gmail.com" class="btn-email" aria-label="Email Franklee Group">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Email Us
+        </a>
+      </div>
+      <p class="contact-fine">
+        <a href="mailto:skhumbuzomadiba@gmail.com">skhumbuzomadiba@gmail.com</a>
+        &nbsp;&bull;&nbsp;
+        Gauteng, South Africa
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===================== FOOTER ===================== -->
+<footer id="footer" aria-label="Site footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" aria-label="Franklee Group home">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M8 32 L20 8 L32 32" fill="none" stroke="#F05A1A" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M13 22 L27 22" fill="none" stroke="#F05A1A" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+          </svg>
+          FRANKLEE GROUP
+        </a>
+        <p class="footer-tagline">We keep your freight moving — and your margins recovered. South Africa's integrated logistics and supply chain group.</p>
+        <p class="footer-location">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Gauteng, South Africa
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Divisions</h4>
+        <ul>
+          <li><a href="#divisions">Truck Wash</a></li>
+          <li><a href="#divisions">Logistics &amp; Warehousing</a></li>
+          <li><a href="#divisions">Supply Chain Consultancy</a></li>
+          <li><a href="#loop-feature">Franklee Loop &#8599;</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#thesis">About</a></li>
+          <li><a href="#capabilities">Why Franklee</a></li>
+          <li><a href="#loop-feature">Backhaul Exchange</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="./loop/index.html">Loop Platform &#8599;</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:skhumbuzomadiba@gmail.com">skhumbuzomadiba@gmail.com</a></li>
+          <li><a href="#contact">WhatsApp (TBC)</a></li>
+          <li><a href="#contact">Get a Quote</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy">&#169; 2026 Franklee Group (Pty) Ltd. All rights reserved. Gauteng, South Africa.</p>
+      <a href="./loop/index.html" class="footer-loop-link">Franklee Loop Platform &#8599;</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<script>
+  'use strict';
+
+  /* ─── Nav scroll ─── */
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  }, { passive: true });
+
+  /* ─── Hamburger ─── */
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu   = document.getElementById('mobileMenu');
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', isOpen);
+    hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
+  });
+  document.querySelectorAll('.mobile-link, .nav-mobile .btn-orange').forEach(el => {
+    el.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburgerBtn.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* ─── Scroll Reveal ─── */
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  /* ─── Stat counters ─── */
+  function animateCounter(el) {
+    const target   = parseFloat(el.getAttribute('data-target'));
+    const suffix   = el.getAttribute('data-suffix') || '';
+    const duration = 1800;
+    const start    = performance.now();
+    (function update(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const e = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      el.textContent = Math.floor(target * e) + suffix;
+      if (p < 1) requestAnimationFrame(update);
+    })(start);
+  }
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { animateCounter(e.target); statObserver.unobserve(e.target); }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-num[data-target]').forEach(el => statObserver.observe(el));
+
+  /* ─── 3D Card Tilt ─── */
+  document.querySelectorAll('[data-tilt]').forEach(card => {
+    card.addEventListener('mouseenter', () => { card.style.transition = 'transform 0.08s linear'; });
+    card.addEventListener('mousemove', (e) => {
+      const r  = card.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+      const dy = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+      card.style.transform = `perspective(1000px) rotateX(${dy * -8}deg) rotateY(${dx * 8}deg) translateY(-8px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transition = 'transform 0.6s cubic-bezier(0.22,1,0.36,1)';
+      card.style.transform  = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+    });
+  });
+
+  /* ─── Truck dot animation along SVG path ─── */
+  (function() {
+    const truck  = document.getElementById('truckGroup');
+    const path   = document.getElementById('activeRoute');
+    if (!truck || !path) return;
+
+    let startTs = null;
+    const DURATION = 4200;
+
+    function frame(ts) {
+      if (!startTs) startTs = ts;
+      const elapsed  = (ts - startTs) % DURATION;
+      const progress = elapsed / DURATION;
+      const len      = path.getTotalLength();
+      const pt       = path.getPointAtLength(progress * len);
+
+      // rotation angle
+      const pt2  = path.getPointAtLength(Math.min(progress * len + 6, len));
+      const ang  = Math.atan2(pt2.y - pt.y, pt2.x - pt.x) * 180 / Math.PI;
+      truck.setAttribute('transform', `translate(${pt.x},${pt.y}) rotate(${ang})`);
+      requestAnimationFrame(frame);
+    }
+
+    const loopSec = document.getElementById('loop-feature');
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { requestAnimationFrame(frame); obs.disconnect(); }
+    }, { threshold: 0.15 });
+    obs.observe(loopSec);
+
+    // Animate route line draw
+    const ar = document.getElementById('activeRoute');
+    const lineObs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) { if(ar) ar.classList.add('animated'); lineObs.disconnect(); }
+    }, { threshold: 0.15 });
+    lineObs.observe(loopSec);
+  })();
+
+  /* ─── Smooth anchor scroll ─── */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 72;
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+      }
+    });
+  });
+
+  /* ─── Hero parallax ─── */
+  const heroBg = document.querySelector('.hero-bg');
+  if (heroBg) {
+    window.addEventListener('scroll', () => {
+      const sy = window.scrollY;
+      if (sy < window.innerHeight * 1.2) {
+        heroBg.style.transform = `scale(1.08) translateY(${sy * 0.22}px)`;
+      }
+    }, { passive: true });
+  }
+
+  /* ─── Active nav highlight ─── */
+  const sections  = document.querySelectorAll('section[id]');
+  const navLinks  = document.querySelectorAll('.nav-links a');
+  const secObs    = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(a => {
+          a.style.color = (a.getAttribute('href') === '#' + id) ? 'var(--orange)' : '';
+        });
+      }
+    });
+  }, { threshold: 0.45 });
+  sections.forEach(s => secObs.observe(s));
+
+  /* ─── Console easter egg ─── */
+  console.log('%c FRANKLEE GROUP ', 'background:#F05A1A;color:#fff;font-size:18px;font-weight:bold;padding:4px 8px;font-family:monospace;');
+  console.log('%cWe keep your freight moving — and your margins recovered.', 'color:#F05A1A;font-family:monospace;font-size:11px;');
+</script>
+
+</body>
+</html>

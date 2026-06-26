@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Franklee Loop — Backhaul Exchange</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════
+   ROOT VARIABLES & RESET
+═══════════════════════════════════ */
+:root{
+  --navy:#070C1A;--navy-800:#0D1525;--navy-700:#111C30;--navy-600:#162240;
+  --orange:#F05A1A;--orange-glow:rgba(240,90,26,.28);--orange-soft:#FF7A3D;
+  --white:#fff;--slate:#8B96B0;--slate-light:#B8C2D8;
+  --success:#22C55E;--success-dim:rgba(34,197,94,.18);
+  --error:#EF4444;--error-dim:rgba(239,68,68,.18);
+  --driver-tint:rgba(34,197,94,.12);--shipper-tint:rgba(59,130,246,.12);--admin-tint:rgba(168,85,247,.12);
+  --line:rgba(255,255,255,.08);--line-med:rgba(255,255,255,.14);
+  --radius:16px;--radius-sm:10px;
+  --shadow:0 8px 32px rgba(0,0,0,.45);--shadow-sm:0 4px 16px rgba(0,0,0,.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;
+  background:#050913;color:var(--white);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;-webkit-font-smoothing:antialiased;
+}
+input,select,textarea,button{font-family:'Outfit',sans-serif}
+button{cursor:pointer;border:none;outline:none}
+input,select,textarea{outline:none;border:none}
+a{color:inherit;text-decoration:none}
+
+/* ═══════════════════════════════════
+   APP SHELL
+═══════════════════════════════════ */
+#app{
+  width:100%;max-width:480px;min-height:100vh;max-height:100vh;
+  background:var(--navy);position:relative;overflow:hidden;
+  box-shadow:0 0 0 1px var(--line),var(--shadow);
+  display:flex;flex-direction:column;
+}
+#app::before{
+  content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);
+  width:360px;height:360px;
+  background:radial-gradient(circle,var(--orange-glow) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+/* ═══════════════════════════════════
+   SCREEN SYSTEM
+═══════════════════════════════════ */
+.screen{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  background:var(--navy);transform:translateX(100%);
+  transition:transform .42s cubic-bezier(.22,.84,.25,1);
+  overflow-y:auto;overflow-x:hidden;z-index:1;
+}
+.screen.active{transform:translateX(0)}
+.screen.exit{transform:translateX(-80px);opacity:0;transition:transform .38s ease,opacity .38s ease}
+.screen::-webkit-scrollbar{width:3px}
+.screen::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px}
+
+/* ═══════════════════════════════════
+   TOP BAR
+═══════════════════════════════════ */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;padding:14px 18px;
+  background:rgba(7,12,26,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line);gap:12px;flex-shrink:0;
+}
+.topbar-back{
+  width:36px;height:36px;background:var(--navy-700);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0;
+}
+.topbar-back:hover{background:var(--navy-600)}
+.topbar-back svg{width:18px;height:18px;stroke:#fff}
+.topbar-title{font-size:.95rem;font-weight:600;color:var(--slate-light);flex:1}
+.topbar-badge{
+  padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.badge-driver{background:var(--driver-tint);color:var(--success);border:1px solid rgba(34,197,94,.3)}
+.badge-shipper{background:var(--shipper-tint);color:#60A5FA;border:1px solid rgba(59,130,246,.3)}
+.badge-admin{background:var(--admin-tint);color:#C084FC;border:1px solid rgba(168,85,247,.3)}
+
+/* ═══════════════════════════════════
+   BUTTONS
+═══════════════════════════════════ */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 22px;border-radius:var(--radius-sm);
+  font-weight:700;font-size:.95rem;
+  transition:.2s cubic-bezier(.22,.84,.25,1);
+  cursor:pointer;letter-spacing:.02em;position:relative;overflow:hidden;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--orange);color:#fff;box-shadow:0 4px 20px var(--orange-glow)}
+.btn-primary:hover{background:var(--orange-soft);box-shadow:0 6px 28px var(--orange-glow)}
+.btn-outline{background:transparent;border:1.5px solid var(--line-med);color:var(--slate-light)}
+.btn-outline:hover{border-color:var(--orange);color:#fff}
+.btn-success{background:var(--success);color:#fff;box-shadow:0 4px 20px rgba(34,197,94,.3)}
+.btn-danger{background:var(--error);color:#fff;box-shadow:0 4px 20px rgba(239,68,68,.3)}
+.btn-ghost{background:var(--navy-700);color:var(--slate-light);border:1px solid var(--line)}
+.btn-ghost:hover{background:var(--navy-600);color:#fff}
+.btn-purple{background:#7C3AED;color:#fff;box-shadow:0 4px 20px rgba(124,58,237,.3)}
+.btn-blue{background:#2563EB;color:#fff;box-shadow:0 4px 20px rgba(37,99,235,.3)}
+.btn-sm{padding:9px 16px;font-size:.82rem;border-radius:8px}
+.btn-full{width:100%}
+
+/* ═══════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════ */
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate)}
+.form-control{
+  width:100%;background:var(--navy-700);border:1.5px solid var(--line);
+  border-radius:var(--radius-sm);color:#fff;padding:12px 14px;font-size:.95rem;transition:.2s;
+}
+.form-control:focus{border-color:var(--orange);background:var(--navy-600)}
+.form-control::placeholder{color:var(--slate)}
+select.form-control{cursor:pointer}
+select.form-control option{background:var(--navy-700);color:#fff}
+textarea.form-control{resize:vertical;min-height:80px}
+.slider-wrap{display:flex;align-items:center;gap:12px}
+.form-slider{
+  flex:1;-webkit-appearance:none;height:4px;
+  background:var(--navy-600);border-radius:2px;outline:none;
+}
+.form-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--orange);cursor:pointer;box-shadow:0 0 10px var(--orange-glow);
+}
+.slider-value{
+  background:var(--orange);color:#fff;padding:4px 10px;border-radius:8px;
+  font-weight:700;font-size:.85rem;min-width:68px;text-align:center;
+}
+
+/* ═══════════════════════════════════
+   CARDS
+═══════════════════════════════════ */
+.card{background:var(--navy-700);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+
+/* ═══════════════════════════════════
+   STATUS BADGES & DOTS
+═══════════════════════════════════ */
+.status-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
+  border-radius:20px;font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+}
+.status-badge .dot{width:7px;height:7px;border-radius:50%;animation:pulse-dot 1.6s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.7}}
+.status-pending{background:rgba(251,191,36,.14);color:#FBBf24;border:1px solid rgba(251,191,36,.3)}
+.status-pending .dot{background:#FBBf24}
+.status-active{background:var(--success-dim);color:var(--success);border:1px solid rgba(34,197,94,.3)}
+.status-active .dot{background:var(--success)}
+.status-review{background:rgba(139,92,246,.14);color:#A78BFA;border:1px solid rgba(139,92,246,.3)}
+.status-review .dot{background:#A78BFA}
+.status-error{background:var(--error-dim);color:var(--error);border:1px solid rgba(239,68,68,.3)}
+.status-error .dot{background:var(--error)}
+
+/* ═══════════════════════════════════
+   NOTIFICATION PANEL
+═══════════════════════════════════ */
+.notif{
+  position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-110%);
+  width:calc(100% - 28px);max-width:452px;z-index:1000;
+  transition:transform .4s cubic-bezier(.22,.84,.25,1);padding-top:12px;
+}
+.notif.show{transform:translateX(-50%) translateY(0)}
+.notif-inner{
+  background:var(--navy-600);border:1px solid var(--line-med);border-radius:var(--radius);
+  padding:16px;box-shadow:var(--shadow);display:flex;gap:14px;align-items:flex-start;
+}
+.notif-icon{
+  width:42px;height:42px;flex-shrink:0;background:var(--orange);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+}
+.notif-title{font-weight:700;font-size:.95rem}
+.notif-desc{font-size:.82rem;color:var(--slate-light);margin-top:3px}
+
+/* ═══════════════════════════════════
+   PROGRESS BAR
+═══════════════════════════════════ */
+.progress-bar{
+  display:flex;align-items:center;padding:14px 18px;gap:0;
+  background:var(--navy-800);border-bottom:1px solid var(--line);flex-shrink:0;
+}
+.step-item{display:flex;align-items:center;flex:1}
+.step-circle{
+  width:28px;height:28px;border-radius:50%;border:2px solid var(--line-med);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;color:var(--slate);flex-shrink:0;transition:.4s;
+}
+.step-circle.done{background:var(--success);border-color:var(--success);color:#fff}
+.step-circle.active{background:var(--orange);border-color:var(--orange);color:#fff;box-shadow:0 0 14px var(--orange-glow)}
+.step-line{flex:1;height:2px;background:var(--line);position:relative;overflow:hidden}
+.step-line .fill{position:absolute;top:0;left:0;height:100%;background:var(--orange);width:0%;transition:width .6s ease}
+
+/* ═══════════════════════════════════
+   SCREEN 0: SPLASH
+═══════════════════════════════════ */
+#s0{background:var(--navy);justify-content:flex-end;padding-bottom:32px}
+.splash-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(240,90,26,.22) 0%,transparent 70%),
+             radial-gradient(ellipse 40% 40% at 80% 80%,rgba(240,90,26,.08) 0%,transparent 60%),var(--navy);
+}
+.net-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(240,90,26,.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(240,90,26,.04) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;
+}
+.splash-top{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding-top:56px;flex:1}
+.splash-icon{
+  width:80px;height:80px;background:var(--orange);border-radius:22px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.04em;color:#fff;
+  box-shadow:0 0 60px rgba(240,90,26,.4),0 0 20px rgba(240,90,26,.6);
+  animation:float 3.5s ease-in-out infinite;margin-bottom:16px;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.splash-brand{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:.1em;text-align:center;line-height:1}
+.splash-brand span{color:var(--orange)}
+.splash-tagline{font-size:.8rem;color:var(--slate);letter-spacing:.22em;text-transform:uppercase;text-align:center;margin-top:4px}
+.splash-divider{width:48px;height:2px;background:var(--orange);border-radius:2px;margin:20px auto;opacity:.5}
+.splash-sub{font-size:.9rem;color:var(--slate-light);text-align:center;max-width:28ch;line-height:1.6}
+
+/* Corridor strip */
+.corridor{display:flex;align-items:center;gap:10px;padding:16px 24px;width:100%;margin-top:8px}
+.corridor-label,.corridor-end{font-size:.65rem;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);white-space:nowrap}
+.corridor-track{flex:1;height:2px;background:var(--line);border-radius:2px;position:relative;overflow:visible}
+.corridor-truck{position:absolute;top:50%;transform:translateY(-50%);font-size:.9rem;animation:truck-move 5s linear infinite;filter:drop-shadow(0 0 6px var(--orange))}
+@keyframes truck-move{0%{left:-10px}100%{left:calc(100% + 10px)}}
+
+/* Role cards */
+.role-cards{display:flex;flex-direction:column;gap:10px;padding:0 20px 20px;position:relative;z-index:2}
+.role-card{
+  background:var(--navy-700);border:1.5px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;display:flex;align-items:center;gap:16px;
+  cursor:pointer;transition:.25s cubic-bezier(.22,.84,.25,1);position:relative;overflow:hidden;
+}
+.role-card::before{content:'';position:absolute;inset:0;opacity:0;transition:.25s}
+.role-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.role-card:active{transform:scale(.98)}
+.role-card.driver-card::before{background:var(--driver-tint)}
+.role-card.shipper-card::before{background:var(--shipper-tint)}
+.role-card.admin-card::before{background:var(--admin-tint)}
+.role-card:hover::before{opacity:1}
+.role-card.driver-card:hover{border-color:var(--success)}
+.role-card.shipper-card:hover{border-color:#60A5FA}
+.role-card.admin-card:hover{border-color:#C084FC}
+.role-emoji{
+  font-size:2rem;width:52px;height:52px;background:var(--navy-600);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.25s;
+}
+.role-card:hover .role-emoji{transform:scale(1.08)}
+.role-name{font-weight:700;font-size:1rem;margin-bottom:2px}
+.role-desc{font-size:.78rem;color:var(--slate)}
+.role-arrow{color:var(--slate);font-size:1.2rem;transition:.2s}
+.role-card:hover .role-arrow{color:var(--orange);transform:translateX(3px)}
+.splash-footer{text-align:center;padding:12px 20px 0;font-size:.72rem;color:var(--slate);position:relative;z-index:2}
+.splash-footer a{color:var(--orange)}
+
+/* ═══════════════════════════════════
+   AUTH SCREENS
+═══════════════════════════════════ */
+.auth-wrap{flex:1;padding:24px 20px;display:flex;flex-direction:column;gap:20px}
+.auth-header{text-align:center}
+.auth-tabs{display:flex;background:var(--navy-700);border-radius:var(--radius-sm);padding:4px;gap:4px}
+.auth-tab{flex:1;padding:9px;text-align:center;border-radius:8px;font-size:.85rem;font-weight:600;color:var(--slate);cursor:pointer;transition:.2s}
+.auth-tab.active{background:var(--orange);color:#fff;box-shadow:0 2px 12px var(--orange-glow)}
+.form-stack{display:flex;flex-direction:column;gap:14px}
+.section-heading{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em;margin-top:6px}
+.label{font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)}
+.muted{color:var(--slate)}
+.f-sm{font-size:.82rem}.f-xs{font-size:.72rem}
+.mt-4{margin-top:4px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}
+.mb-4{margin-bottom:4px}.mb-8{margin-bottom:8px}.mb-12{margin-bottom:12px}.mb-16{margin-bottom:16px}
+.center{text-align:center}.bold{font-weight:700}
+.flex{display:flex}.flex-1{flex:1}.gap-8{gap:8px}.gap-12{gap:12px}
+.text-orange{color:var(--orange)}.text-success{color:var(--success)}.text-slate{color:var(--slate)}
+.hidden{display:none!important}
+.section-label{font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+
+/* ═══════════════════════════════════
+   PRE-ATTENDANCE
+═══════════════════════════════════ */
+.attend-wrap{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:24px;padding:32px 20px;text-align:center;
+}
+.attend-graphic{
+  width:100px;height:100px;background:var(--driver-tint);border-radius:50%;
+  border:2px solid rgba(34,197,94,.4);display:flex;align-items:center;justify-content:center;
+  font-size:2.8rem;animation:attend-pulse 2s ease-in-out infinite;
+}
+@keyframes attend-pulse{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{box-shadow:0 0 0 18px rgba(34,197,94,0)}}
+.attend-actions{display:flex;gap:12px;width:100%}
+.attend-actions .btn{flex:1}
+.waiting-anim{width:80px;height:80px;position:relative}
+.waiting-ring{
+  position:absolute;inset:0;border-radius:50%;border:3px solid transparent;
+  border-top-color:var(--orange);animation:spin .9s linear infinite;
+}
+.waiting-ring:nth-child(2){inset:10px;border-top-color:rgba(240,90,26,.5);animation-duration:1.3s}
+.waiting-dot{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ═══════════════════════════════════
+   ASSIGNMENT CARD
+═══════════════════════════════════ */
+.assign-card{
+  background:var(--navy-700);border:1.5px solid rgba(34,197,94,.3);
+  border-radius:var(--radius);padding:20px;animation:slideUp .5s ease;
+}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.assign-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.assign-row:last-child{border:none}
+.assign-key{font-size:.78rem;color:var(--slate)}
+.assign-val{font-size:.88rem;font-weight:600}
+.route-display{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.95rem}
+.route-arrow{color:var(--orange)}
+
+/* ═══════════════════════════════════
+   HAUL REQUEST
+═══════════════════════════════════ */
+.haul-wrap{padding:20px;display:flex;flex-direction:column;gap:18px}
+
+/* NEGOTIATION PANEL */
+.nego-panel{
+  background:var(--navy-700);border:1.5px solid rgba(251,191,36,.2);
+  border-radius:var(--radius);padding:20px;margin:0 20px 20px;animation:slideUp .5s ease;
+}
+.nego-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.nego-icon{width:36px;height:36px;background:rgba(251,191,36,.14);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.nego-title{font-weight:700;font-size:.95rem}
+.nego-sub{font-size:.75rem;color:var(--slate)}
+.offer-row{background:var(--navy-800);border-radius:10px;padding:14px;margin-bottom:12px}
+.offer-label{font-size:.72rem;color:var(--slate);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+.offer-amount{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.06em}
+.offer-amount.mine{color:var(--slate-light)}
+.offer-amount.admin{color:var(--orange)}
+.offer-reasoning{font-size:.78rem;color:var(--slate);margin-top:4px;font-style:italic}
+.nego-actions{display:flex;gap:8px;flex-wrap:wrap}
+.nego-actions .btn{flex:1;min-width:100px}
+
+/* DEAL CONFIRMED */
+.confirmed-wrap{padding:32px 24px;display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center}
+.confirmed-check{
+  width:80px;height:80px;background:var(--success-dim);border-radius:50%;
+  border:2px solid var(--success);display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;animation:pop .5s cubic-bezier(.22,.84,.25,1);
+}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+
+/* ═══════════════════════════════════
+   ADMIN DASHBOARD
+═══════════════════════════════════ */
+.dashboard-tabs{display:flex;background:var(--navy-800);border-bottom:1px solid var(--line);flex-shrink:0}
+.dash-tab{
+  flex:1;padding:12px 6px;text-align:center;font-size:.75rem;font-weight:600;
+  color:var(--slate);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;letter-spacing:.04em;
+}
+.dash-tab.active{color:#C084FC;border-bottom-color:#C084FC}
+.tab-content{display:none;padding:16px;flex:1;flex-direction:column;gap:12px}
+.tab-content.active{display:flex}
+.driver-pending-card{
+  background:var(--navy-700);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;display:flex;gap:14px;align-items:flex-start;transition:.3s;
+}
+.driver-pending-card.approved{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.06);opacity:.7}
+.driver-pending-card.rejected{opacity:.3;transform:scale(.97)}
+.driver-avatar{
+  width:44px;height:44px;border-radius:12px;background:var(--navy-600);
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;
+}
+.driver-name{font-weight:700;font-size:.95rem;margin-bottom:2px}
+.driver-meta{font-size:.75rem;color:var(--slate);line-height:1.6}
+.driver-actions{display:flex;gap:8px;margin-top:10px}
+.haul-request-card{
+  background:var(--navy-700);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;cursor:pointer;transition:.2s;
+}
+.haul-request-card:hover{border-color:var(--orange)}
+.haul-route{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1rem;margin-bottom:8px}
+.haul-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.haul-tag{background:var(--navy-600);border:1px solid var(--line);border-radius:20px;padding:3px 10px;font-size:.72rem;color:var(--slate-light)}
+.haul-footer{display:flex;align-items:center;justify-content:space-between;font-size:.82rem}
+.haul-budget{color:var(--orange);font-weight:700}
+.admin-nego{
+  background:var(--navy-700);border:1.5px solid rgba(168,85,247,.3);
+  border-radius:var(--radius);padding:20px;animation:slideUp .4s ease;
+}
+.booking-card{
+  background:var(--navy-700);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px;cursor:pointer;transition:.2s;
+}
+.booking-card:hover{border-color:var(--orange);transform:translateY(-1px)}
+.booking-progress{display:flex;gap:4px;margin-top:10px}
+.bp-seg{flex:1;height:4px;background:var(--navy-600);border-radius:2px}
+.bp-seg.done{background:var(--orange)}
+.driver-dropdown{background:var(--navy-700);border:1px solid var(--line-med);border-radius:var(--radius);overflow:hidden;animation:slideUp .3s ease}
+.driver-opt{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--line);transition:.2s}
+.driver-opt:last-child{border:none}
+.driver-opt:hover{background:var(--navy-600)}
+.driver-opt.selected{background:rgba(240,90,26,.1);border-left:3px solid var(--orange)}
+.driver-opt-name{font-weight:600;font-size:.9rem}
+.driver-opt-meta{font-size:.75rem;color:var(--slate)}
+.driver-opt-status{font-size:.72rem;color:var(--success);font-weight:600}
+
+/* ═══════════════════════════════════
+   BOOKING FLOW
+═══════════════════════════════════ */
+.booking-step-content{flex:1;padding:20px;display:flex;flex-direction:column;gap:18px}
+.truck-anim-wrap{background:var(--navy-700);border-radius:var(--radius);padding:20px;text-align:center;position:relative;overflow:hidden}
+.map-bg{
+  width:100%;height:140px;
+  background:radial-gradient(circle at 20% 60%,rgba(240,90,26,.15) 0%,transparent 40%),
+             radial-gradient(circle at 80% 40%,rgba(34,197,94,.1) 0%,transparent 40%),var(--navy-800);
+  border-radius:12px;position:relative;overflow:hidden;margin-bottom:16px;
+}
+.map-road{position:absolute;top:50%;left:0;right:0;height:3px;background:rgba(255,255,255,.1);transform:translateY(-50%)}
+.map-road::after{
+  content:'';position:absolute;top:50%;transform:translateY(-50%);left:0;right:0;height:1px;
+  background:repeating-linear-gradient(to right,rgba(255,255,255,.2) 0,rgba(255,255,255,.2) 20px,transparent 20px,transparent 40px);
+}
+.map-truck{position:absolute;top:50%;transform:translateY(-60%);font-size:1.6rem;filter:drop-shadow(0 0 8px var(--orange));animation:truck-pickup 4s ease-in-out infinite}
+@keyframes truck-pickup{0%{left:8%}50%{left:40%}100%{left:8%}}
+.map-pin{position:absolute;top:20%;right:15%;font-size:1.4rem;animation:pin-bob 1.5s ease-in-out infinite}
+@keyframes pin-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.transit-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.stat-box{background:var(--navy-800);border-radius:10px;padding:12px;text-align:center}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--orange);letter-spacing:.04em}
+.stat-label{font-size:.68rem;color:var(--slate);margin-top:2px}
+.transit-map{background:var(--navy-700);border-radius:var(--radius);padding:18px;position:relative}
+.route-viz{display:flex;align-items:center;gap:0;margin:16px 0;position:relative}
+.route-city{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
+.city-dot{width:12px;height:12px;border-radius:50%;background:var(--orange);box-shadow:0 0 10px var(--orange-glow)}
+.city-dot.dest{background:var(--success);box-shadow:0 0 10px rgba(34,197,94,.4)}
+.city-name{font-size:.7rem;font-weight:600;color:var(--slate-light)}
+.route-line{flex:1;height:3px;background:rgba(240,90,26,.3);position:relative;overflow:visible}
+.route-progress{position:absolute;top:0;left:0;height:100%;background:var(--orange);border-radius:2px;animation:route-grow 8s ease-in-out infinite alternate}
+@keyframes route-grow{0%{width:5%}100%{width:75%}}
+.route-truck-dot{
+  position:absolute;top:50%;width:14px;height:14px;background:var(--orange);border-radius:50%;
+  border:2px solid #fff;transform:translateY(-50%);box-shadow:0 0 14px var(--orange-glow);
+  animation:dot-move 8s ease-in-out infinite alternate;
+}
+@keyframes dot-move{0%{left:2%}100%{left:72%}}
+.confirm-anim{display:flex;flex-direction:column;align-items:center;gap:20px;padding:24px 20px;text-align:center}
+.check-circle{
+  width:100px;height:100px;background:var(--success-dim);border-radius:50%;border:3px solid var(--success);
+  display:flex;align-items:center;justify-content:center;font-size:3rem;
+  animation:pop .6s cubic-bezier(.22,.84,.25,1);box-shadow:0 0 40px rgba(34,197,94,.3);
+}
+.payment-breakdown{background:var(--navy-700);border-radius:var(--radius);overflow:hidden}
+.pay-row{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.pay-row:last-child{border:none}
+.pay-label{font-size:.85rem;color:var(--slate-light)}
+.pay-amount{font-weight:700;font-size:.95rem}
+.stars{display:flex;gap:8px;justify-content:center}
+.star{font-size:2rem;cursor:pointer;transition:.2s;filter:grayscale(1) opacity(.4)}
+.star:hover,.star.lit{filter:none;transform:scale(1.15)}
+/* Collection PIN inputs */
+.pin-box{width:52px;height:58px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:2rem;background:var(--navy-800);border:2px solid var(--line);border-radius:10px;color:#fff;outline:none;transition:border-color .2s,color .2s;-moz-appearance:textfield}
+.pin-box:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(240,90,26,.2)}
+
+/* Confetti */
+.confetti-container{position:fixed;inset:0;pointer-events:none;z-index:999;display:none}
+.confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:confetti-fall 2s ease-in forwards}
+@keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+@media(min-width:520px){
+  body{background:linear-gradient(135deg,#050913 0%,#0D0820 100%)}
+  #app{border-radius:40px;max-height:860px;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 40px 80px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.04)}
+}
+</style>
+</head>
+<body>
+
+<!-- Confetti -->
+<div class="confetti-container" id="confetti"></div>
+
+<!-- Notification -->
+<div class="notif" id="notif">
+  <div class="notif-inner">
+    <div class="notif-icon" id="notif-icon">🔔</div>
+    <div>
+      <div class="notif-title" id="notif-title">Notification</div>
+      <div class="notif-desc" id="notif-desc">...</div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+
+<!-- ═══ SCREEN 0: SPLASH ═══ -->
+<div class="screen active" id="s0">
+  <div class="splash-bg"></div>
+  <div class="net-grid" style="opacity:.4"></div>
+  <div class="splash-top">
+    <div class="splash-icon">FL</div>
+    <div class="splash-brand">FRANKLEE <span>LOOP</span></div>
+    <div class="splash-tagline">South Africa's Backhaul Exchange</div>
+    <div class="splash-divider"></div>
+    <div class="splash-sub">Connect loads with carriers. Negotiate deals. Move freight smarter.</div>
+    <div class="corridor">
+      <div class="corridor-label">JHB</div>
+      <div class="corridor-track"><div class="corridor-truck">🚛</div></div>
+      <div class="corridor-end">DBN</div>
+    </div>
+  </div>
+  <div class="role-cards">
+    <div class="role-card driver-card" onclick="selectRole('driver')">
+      <div class="role-emoji">🚛</div>
+      <div style="flex:1">
+        <div class="role-name">I'm a Driver</div>
+        <div class="role-desc">Receive assignments &amp; execute deliveries</div>
+      </div>
+      <div class="role-arrow">›</div>
+    </div>
+    <div class="role-card shipper-card" onclick="selectRole('shipper')">
+      <div class="role-emoji">📦</div>
+      <div style="flex:1">
+        <div class="role-name">I'm a Shipper</div>
+        <div class="role-desc">Post haul requests &amp; negotiate rates</div>
+      </div>
+      <div class="role-arrow">›</div>
+    </div>
+    <div class="role-card admin-card" onclick="selectRole('admin')">
+      <div class="role-emoji">⚙️</div>
+      <div style="flex:1">
+        <div class="role-name">Admin Portal</div>
+        <div class="role-desc">Franklee operations &amp; deal management</div>
+      </div>
+      <div class="role-arrow">›</div>
+    </div>
+  </div>
+  <div class="splash-footer">Part of <a href="../index.html">Franklee Group</a> · Logistics &amp; Supply Chain</div>
+</div>
+
+<!-- ═══ SCREEN 1A: DRIVER AUTH ═══ -->
+<div class="screen" id="s-driver-auth">
+  <div class="topbar">
+    <div class="topbar-back" onclick="back()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="topbar-title">Driver Portal</div>
+    <div class="topbar-badge badge-driver">Driver</div>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-header">
+      <div class="label" style="color:var(--success)">🚛 Welcome Back</div>
+      <div class="section-heading">Sign In to Loop</div>
+      <p class="muted f-sm mt-8">Verified drivers only. All vehicles are inspected.</p>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchAuthTab('driver','login')">Sign In</div>
+      <div class="auth-tab" onclick="switchAuthTab('driver','register')">Register</div>
+    </div>
+    <div id="driver-login-form" class="form-stack">
+      <div class="form-group">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" placeholder="+27 8X XXX XXXX">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" placeholder="••••••••">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="driverLogin()">Sign In →</button>
+      <p class="f-xs text-slate center">Demo: any credentials work</p>
+    </div>
+    <div id="driver-register-form" class="form-stack hidden">
+      <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-control" placeholder="e.g. Sipho Dlamini"></div>
+      <div class="form-group"><label class="form-label">ID / Driver's License No.</label><input type="text" class="form-control" placeholder="RSA ID or License Number"></div>
+      <div class="form-group"><label class="form-label">Vehicle Registration</label><input type="text" class="form-control" placeholder="e.g. GP 123 456"></div>
+      <div class="form-group">
+        <label class="form-label">Vehicle Type</label>
+        <select class="form-control">
+          <option>34 Ton Interlink</option><option>22 Ton Rigid</option>
+          <option>8 Ton Dropside</option><option>Refrigerated Trailer</option><option>Flatbed</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-control" placeholder="+27 8X XXX XXXX"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" placeholder="driver@example.com"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-control" placeholder="Create password"></div>
+      <button class="btn btn-success btn-full" onclick="driverRegister()">Submit Registration ✓</button>
+      <p class="f-xs text-slate center">Profile reviewed by Franklee Admin within 24h</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 1A-B: DRIVER ATTENDANCE ═══ -->
+<div class="screen" id="s-driver-attend">
+  <div class="topbar">
+    <div class="topbar-back" onclick="back()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="topbar-title">Pre-Attendance</div>
+    <div class="topbar-badge badge-driver">Driver</div>
+  </div>
+  <div id="attend-ask">
+    <div class="attend-wrap">
+      <div class="attend-graphic">🚛</div>
+      <div>
+        <div class="section-heading center">Are you available today?</div>
+        <p class="muted f-sm mt-8 center">Friday, 26 June 2026</p>
+      </div>
+      <p class="muted f-sm center" style="max-width:26ch">Your status is shared with Franklee Admin for assignment planning.</p>
+      <div class="attend-actions">
+        <button class="btn btn-success" onclick="markAvailable()">✓ Available</button>
+        <button class="btn btn-ghost" onclick="markUnavailable()">✗ Unavailable</button>
+      </div>
+    </div>
+  </div>
+  <div id="attend-wait" class="hidden">
+    <div class="attend-wrap">
+      <div class="waiting-anim">
+        <div class="waiting-ring"></div>
+        <div class="waiting-ring"></div>
+        <div class="waiting-dot">🟠</div>
+      </div>
+      <div>
+        <div class="section-heading center">Awaiting Assignment</div>
+        <p class="muted f-sm mt-8 center">You're marked as available.</p>
+      </div>
+      <div class="status-badge status-active"><span class="dot"></span> Online &amp; Ready</div>
+      <p class="muted f-xs center">Franklee Admin will assign you a haul. You'll be notified here.</p>
+    </div>
+  </div>
+  <div id="attend-assigned" class="hidden" style="padding:20px;display:flex;flex-direction:column;gap:16px">
+    <div class="section-label">New Assignment Received</div>
+    <div class="assign-card">
+      <div class="card-header">
+        <div class="status-badge status-active"><span class="dot"></span> Assigned</div>
+        <div class="f-xs text-slate">26 Jun 2026</div>
+      </div>
+      <div class="assign-row"><span class="assign-key">Route</span><div class="route-display"><span>Johannesburg</span><span class="route-arrow">→</span><span>Durban</span></div></div>
+      <div class="assign-row"><span class="assign-key">Cargo</span><span class="assign-val">General Freight — 15 Tonnes</span></div>
+      <div class="assign-row"><span class="assign-key">Pickup</span><span class="assign-val">07:00 AM — Germiston DC</span></div>
+      <div class="assign-row"><span class="assign-key">Rate</span><span class="assign-val text-orange">R8.85/km · 590km</span></div>
+      <div class="assign-row"><span class="assign-key">Admin Contact</span><span class="assign-val">+27 11 000 0000</span></div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="goBooking('driver')">View Full Instructions →</button>
+    <button class="btn btn-outline btn-full">📲 Contact Admin via WhatsApp</button>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 1B: SHIPPER AUTH ═══ -->
+<div class="screen" id="s-shipper-auth">
+  <div class="topbar">
+    <div class="topbar-back" onclick="back()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="topbar-title">Shipper Portal</div>
+    <div class="topbar-badge badge-shipper">Shipper</div>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-header">
+      <div class="label" style="color:#60A5FA">📦 Shippers</div>
+      <div class="section-heading">Access Loop</div>
+      <p class="muted f-sm mt-8">Post loads and negotiate rates with Franklee.</p>
+    </div>
+    <div class="auth-tabs" style="--active-color:#2563EB">
+      <div class="auth-tab active" style="" onclick="switchAuthTab('shipper','login')">Sign In</div>
+      <div class="auth-tab" onclick="switchAuthTab('shipper','register')">Register</div>
+    </div>
+    <div id="shipper-login-form" class="form-stack">
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" placeholder="logistics@company.co.za"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-control" placeholder="••••••••"></div>
+      <button class="btn btn-blue btn-full" onclick="shipperLogin()">Sign In →</button>
+      <p class="f-xs text-slate center">Demo: any credentials work</p>
+    </div>
+    <div id="shipper-register-form" class="form-stack hidden">
+      <div class="form-group"><label class="form-label">Company / Full Name</label><input type="text" class="form-control" placeholder="e.g. Nkosi Logistics (Pty) Ltd"></div>
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" placeholder="ops@company.co.za"></div>
+      <div class="form-group"><label class="form-label">Phone</label><input type="tel" class="form-control" placeholder="+27 8X XXX XXXX"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-control" placeholder="Create password"></div>
+      <button class="btn btn-blue btn-full" onclick="shipperLogin()">Create Account →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 1B-B: POST A HAUL ═══ -->
+<div class="screen" id="s-post-haul">
+  <div class="topbar">
+    <div class="topbar-back" onclick="back()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="topbar-title">Post a Haul Request</div>
+    <div class="topbar-badge badge-shipper">Shipper</div>
+  </div>
+  <div class="haul-wrap">
+    <div style="background:var(--shipper-tint);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:12px 14px" class="f-sm">
+      🇿🇦 All routes are South African domestic corridors. Pricing in ZAR.
+    </div>
+    <div class="form-stack">
+      <div class="form-group">
+        <label class="form-label">Origin City</label>
+        <select class="form-control" id="haul-origin">
+          <option value="">Select city</option>
+          <option value="Johannesburg">Johannesburg (GP)</option>
+          <option value="Durban">Durban (KZN)</option>
+          <option value="Cape Town">Cape Town (WC)</option>
+          <option value="Pretoria">Pretoria (GP)</option>
+          <option value="Bloemfontein">Bloemfontein (FS)</option>
+          <option value="Gqeberha">Gqeberha / PE (EC)</option>
+          <option value="East London">East London (EC)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Destination City</label>
+        <select class="form-control" id="haul-dest">
+          <option value="">Select city</option>
+          <option value="Johannesburg">Johannesburg (GP)</option>
+          <option value="Durban">Durban (KZN)</option>
+          <option value="Cape Town">Cape Town (WC)</option>
+          <option value="Pretoria">Pretoria (GP)</option>
+          <option value="Bloemfontein">Bloemfontein (FS)</option>
+          <option value="Gqeberha">Gqeberha / PE (EC)</option>
+          <option value="East London">East London (EC)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cargo Type</label>
+        <select class="form-control" id="haul-cargo">
+          <option value="">Select type</option>
+          <option value="General">General Freight</option>
+          <option value="Refrigerated">Refrigerated / Cold Chain</option>
+          <option value="Hazardous">Hazardous Materials</option>
+          <option value="Bulk">Bulk / Agricultural</option>
+          <option value="Fragile">Fragile / High Value</option>
+          <option value="Automotive">Automotive Parts</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Weight (Tonnes)</label>
+        <input type="number" class="form-control" id="haul-weight" placeholder="e.g. 15" min="0.5" max="34" step="0.5">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pickup Date</label>
+        <input type="date" class="form-control" id="haul-date" value="2026-06-29">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Budget per km (ZAR)</label>
+        <div class="slider-wrap">
+          <input type="range" class="form-slider" id="haul-budget-slider" min="5" max="20" step="0.1" value="8.5" oninput="updateBudget(this.value)">
+          <div class="slider-value" id="haul-budget-display">R8.50</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Additional Notes</label>
+        <textarea class="form-control" id="haul-notes" placeholder="e.g. Tail-lift required, delivery window 08:00–16:00..."></textarea>
+      </div>
+    </div>
+    <button class="btn btn-blue btn-full" onclick="submitHaul()">Post Request →</button>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 1B-C: REQUEST STATUS / NEGOTIATION ═══ -->
+<div class="screen" id="s-haul-status">
+  <div class="topbar">
+    <div class="topbar-back" onclick="back()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="topbar-title">Haul Request</div>
+    <div class="topbar-badge badge-shipper">Shipper</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding-bottom:24px">
+    <div style="padding:20px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center">
+      <div class="status-badge status-review" id="haul-status-badge"><span class="dot"></span> Under Review by Admin</div>
+      <p class="f-sm muted" style="max-width:28ch">Franklee Admin will review your request and respond shortly.</p>
+    </div>
+    <div style="margin:0 20px 16px" class="card">
+      <div class="section-label">Your Request</div>
+      <div class="assign-row"><span class="assign-key">Route</span><div class="route-display f-sm"><span id="sum-origin">JHB</span><span class="route-arrow">→</span><span id="sum-dest">DBN</span></div></div>
+      <div class="assign-row"><span class="assign-key">Cargo</span><span class="assign-val f-sm" id="sum-cargo">General Freight</span></div>
+      <div class="assign-row"><span class="assign-key">Weight</span><span class="assign-val f-sm" id="sum-weight">15 Tonnes</span></div>
+      <div class="assign-row"><span class="assign-key">Pickup</span><span class="assign-val f-sm" id="sum-date">29 Jun 2026</span></div>
+      <div class="assign-row"><span class="assign-key">Budget</span><span class="assign-val text-orange" id="sum-budget">R8.50/km</span></div>
+    </div>
+    <div class="nego-panel hidden" id="nego-panel">
+      <div class="nego-header">
+        <div class="nego-icon">🤝</div>
+        <div><div class="nego-title">Counter-Offer Received</div><div class="nego-sub">Franklee Group · Just now</div></div>
+      </div>
+      <div class="offer-row">
+        <div class="offer-label">Your Offer</div>
+        <div class="offer-amount mine" id="nego-mine">R8.50/km</div>
+      </div>
+      <div class="offer-row" style="border:1px solid rgba(240,90,26,.3)">
+        <div class="offer-label">Franklee Counter-offer</div>
+        <div class="offer-amount admin" id="nego-admin">R9.20/km</div>
+        <div class="offer-reasoning" id="nego-reason">Peak season corridor surcharge — JHB-DBN route</div>
+      </div>
+      <div id="nego-counter-input" class="hidden" style="margin:12px 0">
+        <div class="form-group">
+          <label class="form-label">Your Counter-offer (ZAR/km)</label>
+          <div class="slider-wrap">
+            <input type="range" class="form-slider" id="counter-slider" min="5" max="20" step="0.05" value="8.85" oninput="updateCounter(this.value)">
+            <div class="slider-value" id="counter-display">R8.85</div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full mt-12" onclick="submitCounter()">Submit Counter →</button>
+      </div>
+      <div class="nego-actions" id="nego-actions">
+        <button class="btn btn-success btn-sm" onclick="acceptOffer()">✓ Accept</button>
+        <button class="btn btn-ghost btn-sm" onclick="makeCounter()">↕ Counter</button>
+        <button class="btn btn-danger btn-sm" onclick="declineOffer()">✗ Decline</button>
+      </div>
+    </div>
+    <div class="hidden" id="deal-confirmed" style="padding:0 20px 20px">
+      <div class="confirmed-wrap">
+        <div class="confirmed-check">✓</div>
+        <div class="section-heading center">Deal Confirmed!</div>
+        <p class="muted f-sm center">Your haul has been booked with Franklee Group.</p>
+        <div class="card" style="width:100%;text-align:left">
+          <div class="assign-row"><span class="assign-key">Agreed Rate</span><span class="assign-val text-orange" id="final-rate">R8.85/km</span></div>
+          <div class="assign-row"><span class="assign-key">Driver Assigned</span><span class="assign-val">Sipho Dlamini <span style="background:rgba(34,197,94,.15);color:#22C55E;border:1px solid rgba(34,197,94,.3);border-radius:100px;font-size:.6rem;padding:2px 7px;letter-spacing:.08em">✓ KYC</span></span></div>
+          <div class="assign-row"><span class="assign-key">Pickup</span><span class="assign-val">07:00 AM, 29 Jun 2026</span></div>
+        </div>
+        <!-- Collection PIN — issued by backend at match confirmation -->
+        <div class="card" style="width:100%;text-align:left;border-color:rgba(240,90,26,.4);background:rgba(240,90,26,.06);margin-bottom:0">
+          <div class="section-label" style="color:var(--orange)">🔐 Your Collection PIN</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:.4em;color:#fff;text-align:center;padding:10px 0" id="collection-pin">7842</div>
+          <p class="f-xs text-slate" style="text-align:center;margin-top:0">Show this 4-digit PIN to the driver at pickup to verify identity. One-time use only.</p>
+        </div>
+        <!-- Escrow hold notice -->
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.25);border-radius:10px">
+          <span style="font-size:1.3rem;flex:none">🔒</span>
+          <div>
+            <div class="f-sm bold" style="color:#60A5FA">Payment Held in Escrow</div>
+            <div class="f-xs text-slate">Freight value secured with Franklee. Released to carrier on confirmed delivery only.</div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" onclick="goBooking('shipper')">Track Your Haul →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 1C: ADMIN AUTH ═══ -->
+<div class="screen" id="s-admin-auth">
+  <div class="topbar">
+    <div class="topbar-back" onclick="back()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="topbar-title">Admin Portal</div>
+    <div class="topbar-badge badge-admin">Admin</div>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-header">
+      <div class="label" style="color:#C084FC">⚙️ Franklee Operations</div>
+      <div class="section-heading">Admin Access</div>
+      <p class="muted f-sm mt-8">Restricted to authorised Franklee Group staff.</p>
+    </div>
+    <div class="card" style="border-color:rgba(168,85,247,.3);background:var(--admin-tint)">
+      <div class="f-xs text-slate mb-8">DEMO CREDENTIALS</div>
+      <div class="f-sm" style="color:#C084FC">admin@franklee.co.za / admin123</div>
+    </div>
+    <div class="form-stack">
+      <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-control" placeholder="admin@franklee.co.za" value="admin@franklee.co.za"></div>
+      <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-control" placeholder="••••••••" value="admin123"></div>
+      <button class="btn btn-purple btn-full" onclick="adminLogin()">Access Dashboard →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 1C-B: ADMIN DASHBOARD ═══ -->
+<div class="screen" id="s-admin-dash">
+  <div class="topbar">
+    <div class="topbar-back" onclick="back()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="topbar-title">Operations Dashboard</div>
+    <div class="topbar-badge badge-admin">Admin</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);flex-shrink:0">
+    <div style="background:var(--navy-800);padding:12px;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--orange)">3</div>
+      <div class="f-xs text-slate">Pending</div>
+    </div>
+    <div style="background:var(--navy-800);padding:12px;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#60A5FA">2</div>
+      <div class="f-xs text-slate">Requests</div>
+    </div>
+    <div style="background:var(--navy-800);padding:12px;text-align:center">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--success)">4</div>
+      <div class="f-xs text-slate">Active</div>
+    </div>
+  </div>
+  <div class="dashboard-tabs" id="dash-tabs">
+    <div class="dash-tab active" onclick="switchDashTab(0)">Sign-ups</div>
+    <div class="dash-tab" onclick="switchDashTab(1)">Requests</div>
+    <div class="dash-tab" onclick="switchDashTab(2)">Bookings</div>
+  </div>
+  <div style="flex:1;overflow-y:auto">
+    <!-- Tab 0: Sign-ups -->
+    <div class="tab-content active" id="tab-signups">
+      <div class="section-label">Pending Driver Registrations</div>
+      <div class="driver-pending-card" id="drv-card-0">
+        <div class="driver-avatar">👨🏿</div>
+        <div style="flex:1">
+          <div class="driver-name">Sipho Dlamini</div>
+          <div class="driver-meta">ID: 8501155082086 · 34 Ton Interlink<br>Lic: GP 124 782 · +27 82 555 0011</div>
+          <div class="driver-actions">
+            <button class="btn btn-success btn-sm" onclick="approveDriver(0)">✓ Approve</button>
+            <button class="btn btn-danger btn-sm" onclick="rejectDriver(0)">✗ Reject</button>
+          </div>
+        </div>
+      </div>
+      <div class="driver-pending-card" id="drv-card-1">
+        <div class="driver-avatar">👨🏾</div>
+        <div style="flex:1">
+          <div class="driver-name">Themba Nkosi</div>
+          <div class="driver-meta">ID: 9203115082086 · 22 Ton Rigid<br>Lic: KZN 091 445 · +27 76 555 0022</div>
+          <div class="driver-actions">
+            <button class="btn btn-success btn-sm" onclick="approveDriver(1)">✓ Approve</button>
+            <button class="btn btn-danger btn-sm" onclick="rejectDriver(1)">✗ Reject</button>
+          </div>
+        </div>
+      </div>
+      <div class="driver-pending-card" id="drv-card-2">
+        <div class="driver-avatar">👩🏽</div>
+        <div style="flex:1">
+          <div class="driver-name">Naledi Mokoena</div>
+          <div class="driver-meta">ID: 9507205082086 · Refrigerated Trailer<br>Lic: GP 567 890 · +27 83 555 0033</div>
+          <div class="driver-actions">
+            <button class="btn btn-success btn-sm" onclick="approveDriver(2)">✓ Approve</button>
+            <button class="btn btn-danger btn-sm" onclick="rejectDriver(2)">✗ Reject</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Tab 1: Requests -->
+    <div class="tab-content" id="tab-requests">
+      <div class="section-label">Incoming Haul Requests</div>
+      <div id="req-card-0">
+        <div class="haul-request-card" onclick="openAdminNego(0)">
+          <div class="haul-route"><span>Johannesburg</span><span class="route-arrow">→</span><span>Durban</span></div>
+          <div class="haul-tags">
+            <span class="haul-tag">General Freight</span><span class="haul-tag">15 Tonnes</span><span class="haul-tag">29 Jun</span>
+          </div>
+          <div class="haul-footer"><span class="f-xs text-slate">Nkosi Logistics</span><span class="haul-budget">R8.50/km</span></div>
+        </div>
+        <div class="admin-nego hidden mt-8" id="admin-nego-0">
+          <div class="f-xs text-slate mb-8" style="letter-spacing:.1em;text-transform:uppercase">Respond to Request</div>
+          <div class="assign-row"><span class="assign-key">Shipper Budget</span><span class="assign-val text-orange">R8.50/km</span></div>
+          <div class="form-group mt-12">
+            <label class="form-label">Your Counter-offer (ZAR/km)</label>
+            <div class="slider-wrap">
+              <input type="range" class="form-slider" id="admin-counter-0" min="5" max="20" step="0.05" value="9.2" oninput="updateAdminCounter(0,this.value)">
+              <div class="slider-value" id="admin-counter-display-0">R9.20</div>
+            </div>
+          </div>
+          <div class="form-group mt-8">
+            <label class="form-label">Reasoning</label>
+            <input type="text" class="form-control" value="Peak season corridor surcharge" id="admin-reason-0">
+          </div>
+          <button class="btn btn-purple btn-full mt-12" onclick="sendAdminCounter(0)">Send Counter-offer →</button>
+          <div class="hidden mt-12" id="admin-nego-status-0">
+            <div class="status-badge status-review mb-12"><span class="dot"></span> Counter-offer sent — awaiting shipper</div>
+            <div class="status-badge status-active hidden mb-12" id="admin-accepted-badge-0"><span class="dot"></span> Shipper accepted R8.85/km!</div>
+            <div class="hidden" id="assign-driver-panel-0">
+              <div class="section-label">Assign a Verified Driver</div>
+              <div class="driver-dropdown">
+                <div class="driver-opt" onclick="selectDriver(0,'sipho')">
+                  <div class="driver-avatar" style="width:36px;height:36px;font-size:1rem">👨🏿</div>
+                  <div><div class="driver-opt-name">Sipho Dlamini</div><div class="driver-opt-meta">34 Ton Interlink · GP 124 782</div></div>
+                  <div class="driver-opt-status">● Available</div>
+                </div>
+                <div class="driver-opt" onclick="selectDriver(0,'naledi')">
+                  <div class="driver-avatar" style="width:36px;height:36px;font-size:1rem">👩🏽</div>
+                  <div><div class="driver-opt-name">Naledi Mokoena</div><div class="driver-opt-meta">22 Ton Rigid · GP 567 890</div></div>
+                  <div class="driver-opt-status">● Available</div>
+                </div>
+                <div class="driver-opt" onclick="selectDriver(0,'themba')">
+                  <div class="driver-avatar" style="width:36px;height:36px;font-size:1rem">👨🏾</div>
+                  <div><div class="driver-opt-name">Themba Nkosi</div><div class="driver-opt-meta">22 Ton Rigid · KZN 091 445</div></div>
+                  <div class="driver-opt-status" style="color:var(--slate)">○ Standby</div>
+                </div>
+              </div>
+              <button class="btn btn-success btn-full mt-12" id="confirm-assign-btn-0" onclick="confirmAssign(0)" disabled style="opacity:.5">✓ Confirm Assignment</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="req-card-1" class="mt-8">
+        <div class="haul-request-card" onclick="openAdminNego(1)">
+          <div class="haul-route"><span>Cape Town</span><span class="route-arrow">→</span><span>Johannesburg</span></div>
+          <div class="haul-tags">
+            <span class="haul-tag">Refrigerated</span><span class="haul-tag">8 Tonnes</span><span class="haul-tag">30 Jun</span>
+          </div>
+          <div class="haul-footer"><span class="f-xs text-slate">FreshLink Foods</span><span class="haul-budget">R11.20/km</span></div>
+        </div>
+        <div class="admin-nego hidden mt-8" id="admin-nego-1">
+          <div class="f-xs text-slate mb-8" style="letter-spacing:.1em;text-transform:uppercase">Respond to Request</div>
+          <div class="assign-row"><span class="assign-key">Shipper Budget</span><span class="assign-val text-orange">R11.20/km</span></div>
+          <div class="form-group mt-12">
+            <label class="form-label">Counter-offer (ZAR/km)</label>
+            <div class="slider-wrap">
+              <input type="range" class="form-slider" id="admin-counter-1" min="5" max="20" step="0.05" value="11.5" oninput="updateAdminCounter(1,this.value)">
+              <div class="slider-value" id="admin-counter-display-1">R11.50</div>
+            </div>
+          </div>
+          <div class="form-group mt-8">
+            <label class="form-label">Reasoning</label>
+            <input type="text" class="form-control" value="Refrigerated transport premium — cold chain compliance" id="admin-reason-1">
+          </div>
+          <button class="btn btn-purple btn-full mt-12" onclick="sendAdminCounter(1)">Send Counter-offer →</button>
+          <div class="hidden mt-12" id="admin-nego-status-1">
+            <div class="status-badge status-review"><span class="dot"></span> Counter-offer sent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Tab 2: Bookings -->
+    <div class="tab-content" id="tab-bookings">
+      <div class="section-label">Active &amp; Recent Bookings</div>
+      <div class="booking-card" onclick="goBooking('admin')">
+        <div class="flex" style="justify-content:space-between;align-items:flex-start">
+          <div><div class="haul-route" style="font-size:.9rem;margin-bottom:4px"><span>Johannesburg</span><span class="route-arrow">→</span><span>Durban</span></div><div class="f-xs text-slate">Sipho Dlamini · 34 Ton</div></div>
+          <div class="status-badge status-active f-xs"><span class="dot"></span> In Transit</div>
+        </div>
+        <div class="booking-progress mt-12">
+          <div class="bp-seg done"></div><div class="bp-seg done"></div><div class="bp-seg"></div><div class="bp-seg"></div><div class="bp-seg"></div>
+        </div>
+      </div>
+      <div class="booking-card" onclick="goBooking('admin')">
+        <div class="flex" style="justify-content:space-between;align-items:flex-start">
+          <div><div class="haul-route" style="font-size:.9rem;margin-bottom:4px"><span>Pretoria</span><span class="route-arrow">→</span><span>Cape Town</span></div><div class="f-xs text-slate">Naledi Mokoena · Reefer</div></div>
+          <div class="status-badge status-pending f-xs"><span class="dot"></span> Pickup</div>
+        </div>
+        <div class="booking-progress mt-12">
+          <div class="bp-seg done"></div><div class="bp-seg"></div><div class="bp-seg"></div><div class="bp-seg"></div><div class="bp-seg"></div>
+        </div>
+      </div>
+      <div class="booking-card">
+        <div class="flex" style="justify-content:space-between;align-items:flex-start">
+          <div><div class="haul-route" style="font-size:.9rem;margin-bottom:4px"><span>Durban</span><span class="route-arrow">→</span><span>Bloemfontein</span></div><div class="f-xs text-slate">Themba Nkosi · 22 Ton</div></div>
+          <div class="status-badge f-xs" style="background:rgba(34,197,94,.1);color:var(--success);border:1px solid rgba(34,197,94,.3)"><span class="dot"></span> Delivered</div>
+        </div>
+        <div class="booking-progress mt-12">
+          <div class="bp-seg done"></div><div class="bp-seg done"></div><div class="bp-seg done"></div><div class="bp-seg done"></div><div class="bp-seg done"></div>
+        </div>
+      </div>
+      <div class="booking-card" onclick="goBooking('admin')">
+        <div class="flex" style="justify-content:space-between;align-items:flex-start">
+          <div><div class="haul-route" style="font-size:.9rem;margin-bottom:4px"><span>Johannesburg</span><span class="route-arrow">→</span><span>Gqeberha</span></div><div class="f-xs text-slate">Sipho Dlamini · 34 Ton</div></div>
+          <div class="status-badge status-active f-xs"><span class="dot"></span> In Transit</div>
+        </div>
+        <div class="booking-progress mt-12">
+          <div class="bp-seg done"></div><div class="bp-seg done"></div><div class="bp-seg done"></div><div class="bp-seg"></div><div class="bp-seg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 2: BOOKING FLOW ═══ -->
+<div class="screen" id="s-booking">
+  <div class="topbar">
+    <div class="topbar-back" onclick="back()"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+    <div class="topbar-title" id="booking-title">Booking Tracker</div>
+    <div class="topbar-badge badge-driver" id="booking-badge">Driver</div>
+  </div>
+  <!-- Progress bar -->
+  <div class="progress-bar">
+    <div class="step-item"><div class="step-circle active" id="step-0">1</div><div class="step-line"><div class="fill" id="step-fill-0"></div></div></div>
+    <div class="step-item"><div class="step-circle" id="step-1">2</div><div class="step-line"><div class="fill" id="step-fill-1"></div></div></div>
+    <div class="step-item"><div class="step-circle" id="step-2">3</div><div class="step-line"><div class="fill" id="step-fill-2"></div></div></div>
+    <div class="step-item"><div class="step-circle" id="step-3">4</div><div class="step-line"><div class="fill" id="step-fill-3"></div></div></div>
+    <div class="step-item" style="flex:none"><div class="step-circle" id="step-4">5</div></div>
+  </div>
+  <div style="flex:1;overflow-y:auto">
+
+    <!-- Step 1: Pickup -->
+    <div id="bstep-0" class="booking-step-content fade-in">
+      <div class="flex" style="justify-content:space-between;align-items:center">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em">Pickup</div>
+        <div class="status-badge status-pending"><span class="dot"></span> En Route</div>
+      </div>
+      <div class="truck-anim-wrap">
+        <div class="label mb-12">Driver approaching pickup point</div>
+        <div class="map-bg">
+          <div class="map-road"></div>
+          <div class="map-truck">🚛</div>
+          <div class="map-pin">📍</div>
+          <div style="position:absolute;bottom:10px;left:12px;font-size:.68rem;color:rgba(255,255,255,.4)">Germiston DC</div>
+          <div style="position:absolute;bottom:10px;right:12px;font-size:.68rem;color:rgba(255,255,255,.4)">Pickup Point</div>
+        </div>
+        <div class="transit-stats">
+          <div class="stat-box"><div class="stat-val">3.2</div><div class="stat-label">km away</div></div>
+          <div class="stat-box"><div class="stat-val">~8</div><div class="stat-label">min ETA</div></div>
+          <div class="stat-box"><div class="stat-val">07:00</div><div class="stat-label">Scheduled</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-label">Load Details</div>
+        <div class="assign-row"><span class="assign-key">Cargo</span><span class="assign-val">General Freight</span></div>
+        <div class="assign-row"><span class="assign-key">Weight</span><span class="assign-val">15 Tonnes</span></div>
+        <div class="assign-row"><span class="assign-key">Driver</span><span class="assign-val">Sipho Dlamini <span style="background:rgba(34,197,94,.15);color:#22C55E;border:1px solid rgba(34,197,94,.3);border-radius:100px;font-size:.6rem;padding:2px 7px">✓ KYC</span></span></div>
+        <div class="assign-row"><span class="assign-key">Vehicle</span><span class="assign-val">GP 124 782 · 34 Ton</span></div>
+      </div>
+      <!-- Collection PIN verification step (from backend matchFlow.js) -->
+      <div class="card" style="border-color:rgba(240,90,26,.3);background:rgba(240,90,26,.05)">
+        <div class="section-label" style="color:var(--orange)">🔐 Enter Collection PIN</div>
+        <p class="f-xs text-slate mb-12">Shipper will show you their 4-digit PIN. Enter it here to confirm collection and lock in escrow release.</p>
+        <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px">
+          <input type="text" inputmode="numeric" maxlength="1" class="pin-box" id="pin-1" oninput="pinNext(this,'pin-2')">
+          <input type="text" inputmode="numeric" maxlength="1" class="pin-box" id="pin-2" oninput="pinNext(this,'pin-3')">
+          <input type="text" inputmode="numeric" maxlength="1" class="pin-box" id="pin-3" oninput="pinNext(this,'pin-4')">
+          <input type="text" inputmode="numeric" maxlength="1" class="pin-box" id="pin-4" oninput="pinNext(this,null)">
+        </div>
+        <div id="pin-error" class="hidden f-xs" style="color:#EF4444;text-align:center;margin-bottom:8px">⚠ Incorrect PIN — please verify with shipper.</div>
+        <div id="pin-ok" class="hidden f-xs" style="color:#22C55E;text-align:center;margin-bottom:8px">✓ PIN verified — collection confirmed.</div>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn btn-ghost" style="flex:1">📞 Call Shipper</button>
+        <button class="btn btn-primary" style="flex:1" onclick="verifyAndPickup()">Verify &amp; Mark Picked Up →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: In Transit -->
+    <div id="bstep-1" class="booking-step-content hidden fade-in">
+      <div class="flex" style="justify-content:space-between;align-items:center">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em">In Transit</div>
+        <div class="status-badge status-active"><span class="dot"></span> Moving</div>
+      </div>
+      <div class="transit-map">
+        <div class="label mb-12">Live Route Tracker</div>
+        <div class="route-viz">
+          <div class="route-city"><div class="city-dot"></div><div class="city-name">JHB</div></div>
+          <div class="route-line">
+            <div class="route-progress"></div>
+            <div class="route-truck-dot"></div>
+          </div>
+          <div class="route-city"><div class="city-dot dest"></div><div class="city-name">DBN</div></div>
+        </div>
+        <div class="transit-stats">
+          <div class="stat-box"><div class="stat-val" id="eta-val">4h 22m</div><div class="stat-label">ETA</div></div>
+          <div class="stat-box"><div class="stat-val" id="dist-val">362km</div><div class="stat-label">Remaining</div></div>
+          <div class="stat-box"><div class="stat-val">95</div><div class="stat-label">km/h</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-label">Shipment Info</div>
+        <div class="assign-row"><span class="assign-key">Route</span><div class="route-display f-sm">Johannesburg <span class="route-arrow">→</span> Durban</div></div>
+        <div class="assign-row"><span class="assign-key">Distance</span><span class="assign-val">590 km</span></div>
+        <div class="assign-row"><span class="assign-key">Rate</span><span class="assign-val text-orange">R8.85/km</span></div>
+        <div class="assign-row"><span class="assign-key">Total Value</span><span class="assign-val">R5,221.50</span></div>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn btn-ghost" style="flex:1">📲 Contact Driver</button>
+        <button class="btn btn-primary" style="flex:1" onclick="nextBookingStep()">Confirm Arrival →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Delivered -->
+    <div id="bstep-2" class="booking-step-content hidden">
+      <div class="confirm-anim">
+        <div class="check-circle">✓</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em">Load Delivered!</div>
+        <p class="muted f-sm" style="max-width:26ch;text-align:center">Delivery confirmed at Durban Depot — 29 June 2026, 14:37</p>
+      </div>
+      <div class="card mb-16">
+        <div class="section-label">Delivery Summary</div>
+        <div class="assign-row"><span class="assign-key">Delivered To</span><span class="assign-val">Durban Depot — Bayhead</span></div>
+        <div class="assign-row"><span class="assign-key">Signed By</span><span class="assign-val">T. Mthembu (Depot Mgr)</span></div>
+        <div class="assign-row"><span class="assign-key">POD Status</span><span class="assign-val text-success">✓ Received</span></div>
+        <div class="assign-row"><span class="assign-key">Condition</span><span class="assign-val">No Damage Reported</span></div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="nextBookingStep()">Proceed to Payment →</button>
+    </div>
+
+    <!-- Step 4: Payment -->
+    <div id="bstep-3" class="booking-step-content hidden fade-in">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em;margin-bottom:16px">Payment Summary</div>
+      <div class="payment-breakdown">
+        <div class="pay-row"><span class="pay-label">Base Load Payment (590km × R8.85)</span><span class="pay-amount">R5,221.50</span></div>
+        <div class="pay-row"><span class="pay-label">Fuel Surcharge (3%)</span><span class="pay-amount">R156.65</span></div>
+        <div class="pay-row"><span class="pay-label">Franklee Platform Fee (10%)</span><span class="pay-amount text-orange">R537.82</span></div>
+        <div class="pay-row" style="border-top:2px solid var(--orange)">
+          <span class="pay-label bold" style="color:#fff">Total Invoice to Shipper</span>
+          <span class="pay-amount" style="color:#fff;font-size:1.1rem">R5,915.97</span>
+        </div>
+        <div class="pay-row" style="background:var(--navy-800)">
+          <span class="pay-label">Net to Carrier</span>
+          <span class="pay-amount text-success">R4,684.15</span>
+        </div>
+      </div>
+      <div class="card mt-16">
+        <div class="section-label">Payment Breakdown</div>
+        <div class="assign-row"><span class="assign-key">Freight (590km × R8.85)</span><span class="assign-val">R5,221.50</span></div>
+        <div class="assign-row"><span class="assign-key">Franklee Fee (10%)</span><span class="assign-val text-orange">R522.15</span></div>
+        <div class="assign-row" style="border-top:1px solid var(--line);padding-top:8px;margin-top:4px"><span class="assign-key bold" style="color:#fff">Total Billed to Shipper</span><span class="assign-val bold" style="color:#fff">R5,743.65</span></div>
+        <div class="assign-row" style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:8px;margin-top:8px;padding:8px"><span class="assign-key" style="color:#22C55E">Net to Carrier</span><span class="assign-val text-success">R4,699.35</span></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.25);border-radius:10px;margin:12px 0">
+        <span style="font-size:1.2rem;flex:none">🔓</span>
+        <div>
+          <div class="f-sm bold" style="color:#60A5FA">Escrow Released</div>
+          <div class="f-xs text-slate">Held since booking confirmation. Commission deducted. Carrier payout within 24h of delivery confirmation.</div>
+        </div>
+      </div>
+      <div class="status-badge status-active mb-16"><span class="dot"></span> Payment Settled — Ref: FL-2026-0629-001</div>
+      <button class="btn btn-primary btn-full" onclick="nextBookingStep()">Rate &amp; Complete →</button>
+    </div>
+
+    <!-- Step 5: Rate & Complete -->
+    <div id="bstep-4" class="booking-step-content hidden fade-in">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em;margin-bottom:4px">Rate Your Experience</div>
+      <p class="muted f-sm mb-16">Help us maintain South Africa's best freight network.</p>
+      <div class="card mb-16">
+        <div class="label mb-8">Rate the Driver</div>
+        <p class="f-xs text-slate mb-12">Sipho Dlamini — GP 124 782</p>
+        <div class="stars" id="driver-stars">
+          <span class="star" onclick="rateStar('driver',1)">⭐</span>
+          <span class="star" onclick="rateStar('driver',2)">⭐</span>
+          <span class="star" onclick="rateStar('driver',3)">⭐</span>
+          <span class="star" onclick="rateStar('driver',4)">⭐</span>
+          <span class="star" onclick="rateStar('driver',5)">⭐</span>
+        </div>
+      </div>
+      <div class="card mb-16">
+        <div class="label mb-8">Rate Franklee Loop</div>
+        <p class="f-xs text-slate mb-12">Platform experience &amp; admin service</p>
+        <div class="stars" id="platform-stars">
+          <span class="star" onclick="rateStar('platform',1)">⭐</span>
+          <span class="star" onclick="rateStar('platform',2)">⭐</span>
+          <span class="star" onclick="rateStar('platform',3)">⭐</span>
+          <span class="star" onclick="rateStar('platform',4)">⭐</span>
+          <span class="star" onclick="rateStar('platform',5)">⭐</span>
+        </div>
+      </div>
+      <div class="form-group mb-16">
+        <label class="form-label">Leave a Comment (optional)</label>
+        <textarea class="form-control" placeholder="How was your Franklee Loop experience?"></textarea>
+      </div>
+      <button class="btn btn-success btn-full" onclick="completeTransaction()">✓ Complete Transaction</button>
+    </div>
+
+    <!-- Done -->
+    <div id="bstep-done" class="booking-step-content hidden fade-in" style="align-items:center;text-align:center">
+      <div style="margin-top:20px">
+        <div style="font-size:3.5rem;margin-bottom:16px">🎉</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:.06em;color:var(--orange);line-height:1;margin-bottom:8px">TRANSACTION<br>COMPLETE</div>
+        <p class="muted f-sm mb-24">Thank you for using Franklee Loop. Your freight has been delivered and payment settled.</p>
+      </div>
+      <div class="card" style="width:100%;text-align:left;margin-bottom:20px">
+        <div class="assign-row"><span class="assign-key">Booking Ref</span><span class="assign-val text-orange">FL-2026-0629-001</span></div>
+        <div class="assign-row"><span class="assign-key">Route</span><div class="route-display f-sm">JHB <span class="route-arrow">→</span> DBN</div></div>
+        <div class="assign-row"><span class="assign-key">Total Billed</span><span class="assign-val">R5,915.97</span></div>
+        <div class="assign-row"><span class="assign-key">Status</span><span class="assign-val text-success">✓ Complete</span></div>
+      </div>
+      <button class="btn btn-ghost btn-full mb-8" onclick="goHome()">← Back to Home</button>
+      <button class="btn btn-primary btn-full" onclick="goHome()">🚛 Post Another Haul</button>
+      <p class="f-xs text-slate mt-16" style="padding:0 20px">
+        Part of <a href="../index.html" style="color:var(--orange)">Franklee Group</a> · South Africa's Logistics Partner
+      </p>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<script>
+/* ─── STATE ─── */
+const state={role:null,currentScreen:'s0',screenHistory:[],haulData:{},bookingStep:0,selectedDrivers:{},ratings:{driver:0,platform:0}};
+
+/* ─── SCREEN NAV ─── */
+function showScreen(id){
+  const cur=document.querySelector('.screen.active');
+  if(cur&&cur.id!==id){
+    state.screenHistory.push(cur.id);
+    cur.classList.remove('active');
+    cur.classList.add('exit');
+    setTimeout(()=>cur.classList.remove('exit'),400);
+  }
+  const nxt=document.getElementById(id);
+  if(nxt) setTimeout(()=>{nxt.classList.add('active');state.currentScreen=id;},cur?60:0);
+}
+function back(){
+  if(!state.screenHistory.length) return;
+  const prev=state.screenHistory.pop();
+  const cur=document.querySelector('.screen.active');
+  if(cur){cur.classList.remove('active');cur.style.transform='translateX(100%)';setTimeout(()=>cur.style.transform='',400);}
+  const prevEl=document.getElementById(prev);
+  if(prevEl){prevEl.classList.remove('exit');prevEl.classList.add('active');state.currentScreen=prev;}
+}
+
+/* ─── ROLE SELECT ─── */
+function selectRole(role){
+  state.role=role;
+  const map={driver:'s-driver-auth',shipper:'s-shipper-auth',admin:'s-admin-auth'};
+  showScreen(map[role]);
+}
+
+/* ─── AUTH TABS ─── */
+function switchAuthTab(role,tab){
+  const tabs=document.querySelectorAll(`#s-${role}-auth .auth-tab`);
+  tabs.forEach((t,i)=>t.classList.toggle('active',(i===0&&tab==='login')||(i===1&&tab==='register')));
+  document.getElementById(`${role}-login-form`).classList.toggle('hidden',tab!=='login');
+  document.getElementById(`${role}-register-form`).classList.toggle('hidden',tab!=='register');
+}
+
+/* ─── DRIVER ─── */
+function driverLogin(){
+  showScreen('s-driver-attend');
+  document.getElementById('attend-ask').classList.remove('hidden');
+  document.getElementById('attend-wait').classList.add('hidden');
+  document.getElementById('attend-assigned').classList.add('hidden');
+}
+function driverRegister(){
+  showNotif('🕐','Registration Submitted','Your profile is under review. Franklee Admin will verify within 24 hours.');
+  setTimeout(driverLogin,1200);
+}
+function markAvailable(){
+  document.getElementById('attend-ask').classList.add('hidden');
+  document.getElementById('attend-wait').classList.remove('hidden');
+  setTimeout(()=>{
+    showNotif('🚛','New Assignment!','Johannesburg → Durban · 26 Jun · 15 Tonnes');
+    setTimeout(()=>{
+      document.getElementById('attend-wait').classList.add('hidden');
+      document.getElementById('attend-assigned').classList.remove('hidden');
+    },500);
+  },3000);
+}
+function markUnavailable(){
+  showNotif('✓','Marked Unavailable','You won\'t receive assignments today. Update when ready.');
+}
+
+/* ─── SHIPPER ─── */
+function shipperLogin(){showScreen('s-post-haul');}
+function updateBudget(v){document.getElementById('haul-budget-display').textContent='R'+parseFloat(v).toFixed(2);}
+function submitHaul(){
+  const origin=document.getElementById('haul-origin').value||'Johannesburg';
+  const dest=document.getElementById('haul-dest').value||'Durban';
+  const cargo=document.getElementById('haul-cargo').value||'General Freight';
+  const weight=document.getElementById('haul-weight').value||'15';
+  const date=document.getElementById('haul-date').value||'2026-06-29';
+  const budget=parseFloat(document.getElementById('haul-budget-slider').value);
+  state.haulData={origin,dest,cargo,weight,date,budget};
+  document.getElementById('sum-origin').textContent=origin;
+  document.getElementById('sum-dest').textContent=dest;
+  document.getElementById('sum-cargo').textContent=cargo;
+  document.getElementById('sum-weight').textContent=weight+' Tonnes';
+  document.getElementById('sum-date').textContent=formatDate(date);
+  document.getElementById('sum-budget').textContent='R'+budget.toFixed(2)+'/km';
+  document.getElementById('nego-mine').textContent='R'+budget.toFixed(2)+'/km';
+  document.getElementById('nego-panel').classList.add('hidden');
+  document.getElementById('deal-confirmed').classList.add('hidden');
+  document.getElementById('nego-actions').classList.remove('hidden');
+  document.getElementById('nego-counter-input').classList.add('hidden');
+  const badge=document.getElementById('haul-status-badge');
+  badge.innerHTML='<span class="dot"></span> Under Review by Admin';
+  badge.className='status-badge status-review';
+  showScreen('s-haul-status');
+  setTimeout(()=>{
+    showNotif('🤝','Counter-offer Received','Franklee Admin: R9.20/km — Peak season surcharge');
+    document.getElementById('nego-panel').classList.remove('hidden');
+    badge.innerHTML='<span class="dot"></span> Counter-offer Received';
+    badge.className='status-badge status-pending';
+  },3000);
+}
+function updateCounter(v){document.getElementById('counter-display').textContent='R'+parseFloat(v).toFixed(2);}
+function acceptOffer(){
+  document.getElementById('nego-panel').classList.add('hidden');
+  document.getElementById('deal-confirmed').classList.remove('hidden');
+  document.getElementById('final-rate').textContent='R9.20/km';
+  // Generate collection PIN (mirrors backend identity.issueCollectionPin())
+  const pin=String(Math.floor(1000+Math.random()*9000));
+  const pinEl=document.getElementById('collection-pin');
+  if(pinEl) pinEl.textContent=pin;
+  state.collectionPin=pin;
+  const badge=document.getElementById('haul-status-badge');
+  badge.innerHTML='<span class="dot"></span> Deal Confirmed';
+  badge.className='status-badge status-active';
+  showNotif('🎉','Deal Confirmed!','Your collection PIN has been issued. Payment held in escrow.');
+}
+function makeCounter(){
+  document.getElementById('nego-actions').classList.add('hidden');
+  document.getElementById('nego-counter-input').classList.remove('hidden');
+}
+function submitCounter(){
+  document.getElementById('nego-counter-input').classList.add('hidden');
+  document.getElementById('nego-actions').innerHTML='<div class="status-badge status-review"><span class="dot"></span> Awaiting Admin Response…</div>';
+  document.getElementById('nego-actions').classList.remove('hidden');
+  showNotif('⏳','Counter-offer Sent','Waiting for Franklee Admin to respond…');
+  setTimeout(()=>{
+    document.getElementById('nego-panel').classList.add('hidden');
+    document.getElementById('deal-confirmed').classList.remove('hidden');
+    document.getElementById('final-rate').textContent='R8.85/km';
+    const badge=document.getElementById('haul-status-badge');
+    badge.innerHTML='<span class="dot"></span> Deal Confirmed';
+    badge.className='status-badge status-active';
+    showNotif('🎉','Deal Struck at R8.85/km!','Franklee accepted your counter-offer. Booking confirmed!');
+  },3000);
+}
+function declineOffer(){
+  document.getElementById('nego-panel').classList.add('hidden');
+  const badge=document.getElementById('haul-status-badge');
+  badge.innerHTML='<span class="dot"></span> Request Declined';
+  badge.className='status-badge status-error';
+  showNotif('✗','Offer Declined','You can post a new request with a different budget.');
+}
+
+/* ─── ADMIN ─── */
+function adminLogin(){showScreen('s-admin-dash');}
+function switchDashTab(idx){
+  const tabs=document.querySelectorAll('#dash-tabs .dash-tab');
+  const ids=['tab-signups','tab-requests','tab-bookings'];
+  tabs.forEach((t,i)=>t.classList.toggle('active',i===idx));
+  ids.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.toggle('active',i===idx);
+  });
+}
+function approveDriver(idx){
+  const card=document.getElementById('drv-card-'+idx);
+  card.querySelectorAll('.btn').forEach(b=>b.disabled=true);
+  card.classList.add('approved');
+  // Add KYC verified badge (mirrors backend identity.verifyDriver())
+  card.querySelector('.driver-name').insertAdjacentHTML('afterend',
+    '<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">'+
+    '<span class="status-badge status-active f-xs">✓ Approved</span>'+
+    '<span style="background:rgba(34,197,94,.15);color:#22C55E;border:1px solid rgba(34,197,94,.3);border-radius:100px;font-size:.6rem;padding:2px 8px;letter-spacing:.08em;display:inline-flex;align-items:center">✓ KYC Verified</span>'+
+    '</div>');
+  showNotif('✓','Driver Approved & KYC Verified',card.querySelector('.driver-name').textContent+' is now active on Loop.');
+}
+function rejectDriver(idx){
+  const card=document.getElementById('drv-card-'+idx);
+  card.style.transition='all .4s ease';
+  card.classList.add('rejected');
+  showNotif('✗','Driver Rejected','Registration declined. Driver will be notified.');
+  setTimeout(()=>{card.style.maxHeight='0';card.style.overflow='hidden';card.style.padding='0';card.style.margin='0';},500);
+}
+function openAdminNego(idx){
+  const panel=document.getElementById('admin-nego-'+idx);
+  panel.classList.toggle('hidden');
+}
+function updateAdminCounter(idx,v){
+  document.getElementById('admin-counter-display-'+idx).textContent='R'+parseFloat(v).toFixed(2);
+}
+function sendAdminCounter(idx){
+  const statusEl=document.getElementById('admin-nego-status-'+idx);
+  statusEl.classList.remove('hidden');
+  showNotif('📤','Counter-offer Sent','Waiting for shipper to respond…');
+  setTimeout(()=>{
+    const ab=document.getElementById('admin-accepted-badge-'+idx);
+    if(ab){
+      ab.classList.remove('hidden');
+      const ap=document.getElementById('assign-driver-panel-'+idx);
+      if(ap) ap.classList.remove('hidden');
+      showNotif('🎉','Shipper Accepted!','Deal at R8.85/km — now assign a driver.');
+    }
+  },2000);
+}
+function selectDriver(reqIdx,driverId){
+  state.selectedDrivers[reqIdx]=driverId;
+  const opts=document.querySelectorAll(`#assign-driver-panel-${reqIdx} .driver-opt`);
+  const names={sipho:'sipho',naledi:'naledi',themba:'themba'};
+  opts.forEach(o=>o.classList.toggle('selected',o.textContent.toLowerCase().includes(names[driverId])));
+  const btn=document.getElementById('confirm-assign-btn-'+reqIdx);
+  if(btn){btn.disabled=false;btn.style.opacity='1';}
+}
+function confirmAssign(reqIdx){
+  showNotif('🚛','Driver Assigned!','Sipho Dlamini assigned to JHB → DBN haul. Driver notified.');
+  setTimeout(()=>switchDashTab(2),2000);
+}
+
+/* ─── BOOKING FLOW ─── */
+function goBooking(role){
+  state.bookingStep=0;
+  const badge=document.getElementById('booking-badge');
+  const title=document.getElementById('booking-title');
+  if(role==='driver'){badge.className='topbar-badge badge-driver';badge.textContent='Driver';title.textContent='My Assignment';}
+  else if(role==='shipper'){badge.className='topbar-badge badge-shipper';badge.textContent='Shipper';title.textContent='Track My Haul';}
+  else{badge.className='topbar-badge badge-admin';badge.textContent='Admin';title.textContent='Booking Tracker';}
+  resetBookingSteps();
+  showScreen('s-booking');
+  updateProgressBar(0);
+}
+function resetBookingSteps(){
+  for(let i=0;i<=4;i++){const el=document.getElementById('bstep-'+i);if(el)el.classList.add('hidden');}
+  const done=document.getElementById('bstep-done');if(done)done.classList.add('hidden');
+  document.getElementById('bstep-0').classList.remove('hidden');
+  state.bookingStep=0;
+}
+function nextBookingStep(){
+  const prev=document.getElementById('bstep-'+state.bookingStep);
+  if(prev) prev.classList.add('hidden');
+  state.bookingStep++;
+  updateProgressBar(state.bookingStep);
+  if(state.bookingStep>=5){document.getElementById('bstep-done').classList.remove('hidden');return;}
+  const nxt=document.getElementById('bstep-'+state.bookingStep);
+  if(nxt){
+    nxt.classList.remove('hidden');
+    nxt.style.animation='none';
+    requestAnimationFrame(()=>nxt.style.animation='slideUp .4s ease');
+  }
+}
+function updateProgressBar(active){
+  for(let i=0;i<5;i++){
+    const c=document.getElementById('step-'+i);
+    c.classList.remove('active','done');
+    if(i<active){c.classList.add('done');c.textContent='✓';}
+    else if(i===active){c.classList.add('active');c.textContent=i+1;}
+    else c.textContent=i+1;
+  }
+  for(let i=0;i<4;i++){
+    const f=document.getElementById('step-fill-'+i);
+    if(f) f.style.width=i<active?'100%':'0%';
+  }
+}
+
+/* ─── STARS ─── */
+function rateStar(type,n){
+  state.ratings[type]=n;
+  const stars=document.getElementById(type+'-stars').querySelectorAll('.star');
+  stars.forEach((s,i)=>s.classList.toggle('lit',i<n));
+}
+
+/* ─── COMPLETE ─── */
+function completeTransaction(){
+  if(!state.ratings.driver){
+    const el=document.getElementById('driver-stars');
+    el.style.animation='shake .4s ease';
+    setTimeout(()=>el.style.animation='',400);
+    showNotif('⚠️','Rating Required','Please rate the driver before completing.');
+    return;
+  }
+  fireConfetti();
+  nextBookingStep();
+  showNotif('🎉','Transaction Complete!','Thanks for using Franklee Loop. See you next haul!');
+}
+
+/* ─── CONFETTI ─── */
+function fireConfetti(){
+  const container=document.getElementById('confetti');
+  container.style.display='block';container.innerHTML='';
+  const colors=['#F05A1A','#22C55E','#60A5FA','#FBBf24','#C084FC','#fff'];
+  for(let i=0;i<60;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*20}%;background:${colors[Math.floor(Math.random()*colors.length)]};width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;animation-delay:${Math.random()*.8}s;animation-duration:${1.5+Math.random()}s;border-radius:${Math.random()>.5?'50%':'2px'}`;
+    container.appendChild(p);
+  }
+  setTimeout(()=>{container.style.display='none';container.innerHTML='';},3000);
+}
+
+/* ─── NOTIFICATIONS ─── */
+let notifTO=null;
+function showNotif(icon,title,desc){
+  document.getElementById('notif-icon').textContent=icon;
+  document.getElementById('notif-title').textContent=title;
+  document.getElementById('notif-desc').textContent=desc;
+  const el=document.getElementById('notif');
+  el.classList.add('show');
+  if(notifTO) clearTimeout(notifTO);
+  notifTO=setTimeout(()=>el.classList.remove('show'),4500);
+}
+document.getElementById('notif').addEventListener('click',()=>document.getElementById('notif').classList.remove('show'));
+
+/* ─── UTILS ─── */
+function formatDate(s){if(!s)return'';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('en-ZA',{day:'numeric',month:'short',year:'numeric'});}
+function goHome(){state.screenHistory=[];showScreen('s0');}
+
+/* ─── PIN HELPERS (mirrors backend identity.issueCollectionPin + confirmCollection) ─── */
+function pinNext(el,nextId){
+  el.value=el.value.replace(/\D/g,'');
+  if(el.value.length===1&&nextId) document.getElementById(nextId).focus();
+}
+function verifyAndPickup(){
+  const p=[1,2,3,4].map(i=>document.getElementById('pin-'+i).value).join('');
+  if(p.length<4){showNotif('⚠️','Incomplete PIN','Enter all 4 digits to verify collection.');return;}
+  // Demo: any 4-digit PIN is accepted (real system checks against stored PIN)
+  document.getElementById('pin-error').classList.add('hidden');
+  document.getElementById('pin-ok').classList.remove('hidden');
+  [1,2,3,4].forEach(i=>{
+    const el=document.getElementById('pin-'+i);
+    el.style.borderColor='#22C55E';el.style.color='#22C55E';
+  });
+  showNotif('✓','Collection Confirmed','PIN matched. Escrow clock started. Safe travels!');
+  setTimeout(nextBookingStep,1200);
+}
+
+/* ─── LIVE ETA SIM ─── */
+setInterval(()=>{
+  const eta=document.getElementById('eta-val');
+  const dist=document.getElementById('dist-val');
+  if(!eta||!dist) return;
+  const mins=parseInt(eta.textContent.replace(/\D+/g,''))||262;
+  if(mins>1){
+    const nm=mins-1;const h=Math.floor(nm/60);const m=nm%60;
+    eta.textContent=h>0?`${h}h ${m}m`:`${m}m`;
+    const km=parseInt(dist.textContent)||362;
+    if(km>1) dist.textContent=(km-1)+'km';
+  }
+},4000);
+</script>
+</body>
+</html>

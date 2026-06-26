@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Franklee Group — Logistics &amp; Supply Chain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#161838;--navy-800:#1E2150;--navy-700:#262a63;--ink:#0E0F26;
+    --orange:#E8632A;--orange-soft:#F2884E;--slate:#8B92A8;--slate-light:#B9BFD0;
+    --paper:#F5F4F0;--paper-2:#EBE9E2;--white:#fff;--good:#3FB68B;
+    --line:rgba(255,255,255,.12);--line-soft:rgba(255,255,255,.07);--line-dark:rgba(14,15,38,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',sans-serif;background:var(--navy-900);color:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3{font-family:'Archivo',sans-serif;letter-spacing:-.02em}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);font-weight:500}
+
+  /* nav */
+  .nav{position:sticky;top:0;z-index:40;background:rgba(14,15,38,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-in{max-width:1120px;margin:0 auto;padding:15px 28px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:12px}
+  .mark{width:34px;height:34px}
+  .brand-name{font-family:'Archivo',sans-serif;font-weight:800;font-size:.98rem;line-height:1}
+  .brand-name small{display:block;font-weight:700;font-size:.55rem;letter-spacing:.34em;color:var(--slate);margin-top:3px}
+  .nav-links{display:flex;gap:28px;align-items:center}
+  .nav-links a{font-size:.9rem;color:var(--slate-light);font-weight:500;transition:.15s}
+  .nav-links a:hover{color:#fff}
+  .nav-cta{background:var(--orange);color:#fff;padding:9px 18px;border-radius:8px;font-family:'Archivo',sans-serif;font-weight:700;font-size:.86rem}
+  .nav-cta:hover{background:var(--orange-soft)}
+  @media(max-width:760px){.nav-links a:not(.nav-cta){display:none}}
+
+  /* hero */
+  .hero{position:relative;padding:90px 0 80px;background:radial-gradient(130% 90% at 50% -20%,rgba(232,99,42,.18),transparent 58%),var(--navy-900);overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero h1{font-size:clamp(2.6rem,6.6vw,4.8rem);font-weight:900;line-height:.96;max-width:17ch}
+  .hero h1 .ac{color:var(--orange)}
+  .hero .lead{margin-top:24px;max-width:58ch;font-size:1.18rem;color:var(--slate-light)}
+  .hero-cta{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap}
+  .btn{display:inline-block;font-family:'Archivo',sans-serif;font-weight:700;font-size:.95rem;padding:14px 26px;border-radius:10px;transition:.15s;cursor:pointer}
+  .btn.solid{background:var(--orange);color:#fff}.btn.solid:hover{background:var(--orange-soft)}
+  .btn.line{border:1px solid var(--line);color:var(--slate-light)}.btn.line:hover{border-color:var(--orange);color:#fff}
+
+  /* corridor strip signature */
+  .corridor-strip{margin-top:58px;border-top:1px solid var(--line);padding-top:26px;display:flex;align-items:center;gap:18px}
+  .cs-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--slate);letter-spacing:.12em;flex:none}
+  .cs-lane{position:relative;flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+  .cs-lane .run{position:absolute;top:50%;width:9px;height:9px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(232,99,42,.25);transform:translateY(-50%);animation:run 4.5s linear infinite}
+  @keyframes run{0%{left:-2%}100%{left:102%}}
+  .cs-node{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--slate-light);flex:none}
+
+  section{padding:88px 0}
+  .light{background:var(--paper);color:var(--ink)}
+  .light .eyebrow{color:var(--orange)}
+  .ink{background:var(--ink)}
+  .navy{background:var(--navy-800)}
+  .sec-head{max-width:62ch;margin-bottom:50px}
+  .sec-head h2{font-size:clamp(1.8rem,4vw,2.7rem);font-weight:800;margin-top:14px;line-height:1.04}
+  .sec-head p{margin-top:16px;font-size:1.06rem;color:var(--slate)}
+  .light .sec-head p{color:#54586b}
+
+  /* thesis */
+  .thesis-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line-dark);border-radius:16px;overflow:hidden}
+  .tcol{padding:30px 24px;border-right:1px solid var(--line-dark)}
+  .tcol:last-child{border-right:none}
+  .tcol .st{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--orange);letter-spacing:.1em}
+  .tcol h3{font-size:1.05rem;font-weight:700;color:var(--ink);margin:12px 0 8px}
+  .tcol p{font-size:.88rem;color:#54586b}
+
+  /* divisions index */
+  .div-row{display:grid;grid-template-columns:64px 1fr auto;gap:26px;align-items:center;padding:30px 0;border-top:1px solid var(--line);transition:.2s;position:relative}
+  .div-row:last-child{border-bottom:1px solid var(--line)}
+  .div-row:hover{padding-left:10px}
+  .div-num{font-family:'Archivo',sans-serif;font-weight:900;font-size:1.6rem;color:var(--slate);transition:.2s}
+  .div-row:hover .div-num{color:var(--orange)}
+  .div-main h3{font-size:1.45rem;font-weight:800;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .div-main .pill{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.12em;background:var(--orange);color:#fff;padding:4px 9px;border-radius:100px}
+  .div-main p{margin-top:8px;color:var(--slate-light);font-size:.98rem;max-width:64ch}
+  .div-tags{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+  .div-tags span{font-family:'IBM Plex Mono',monospace;font-size:.64rem;color:var(--slate);border:1px solid var(--line);padding:4px 9px;border-radius:100px}
+  .div-chev{font-size:1.6rem;color:var(--slate);transition:.2s;flex:none}
+  .div-row:hover .div-chev{color:var(--orange);transform:translateX(5px)}
+  .div-row a.div-link{font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:var(--orange);display:inline-flex;align-items:center;gap:6px;margin-top:12px}
+
+  /* loop feature band */
+  .loop-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .loop-vis{background:var(--navy-900);border:1px solid var(--line);border-radius:18px;padding:32px}
+  .loop-lane{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin-bottom:26px}
+  .ln-node{text-align:center}
+  .ln-node .ring{width:54px;height:54px;border-radius:50%;border:2px solid var(--slate);display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-weight:800;font-size:.9rem;background:var(--navy-800)}
+  .ln-node .c{margin-top:7px;font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--slate)}
+  .ln-tracks{display:flex;flex-direction:column;gap:24px}
+  .ln-track{position:relative;height:3px;border-radius:3px}
+  .ln-track .lab{position:absolute;top:-20px;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:.08em}
+  .ln-out{background:linear-gradient(90deg,var(--orange),var(--orange-soft))}
+  .ln-out .lab{left:0;color:var(--orange-soft)}
+  .ln-back{background:repeating-linear-gradient(90deg,var(--slate) 0 7px,transparent 7px 14px);opacity:.55}
+  .ln-back .lab{right:0;color:var(--slate)}
+  .ln-fill{position:absolute;top:0;right:0;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--orange-soft),var(--orange));animation:fillb 5s ease-in-out infinite}
+  @keyframes fillb{0%,42%{width:0}82%,100%{width:100%}}
+  .loop-econ{display:flex;gap:24px;border-top:1px solid var(--line);padding-top:22px}
+  .loop-econ .e .n{font-family:'Archivo',sans-serif;font-weight:900;font-size:1.8rem;color:var(--orange);line-height:1}
+  .loop-econ .e .l{font-size:.76rem;color:var(--slate);margin-top:6px}
+  .loop-steps{margin-top:22px;display:flex;flex-direction:column;gap:14px}
+  .loop-steps .s{display:flex;gap:14px;align-items:flex-start}
+  .loop-steps .s .i{font-family:'IBM Plex Mono',monospace;font-size:.78rem;color:var(--orange);flex:none;padding-top:2px}
+  .loop-steps .s p{font-size:.94rem;color:var(--slate-light)}
+
+  /* capabilities */
+  .cap-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .cap{border:1px solid var(--line-dark);border-radius:14px;padding:26px 22px;background:var(--white)}
+  .cap .ic{width:40px;height:40px;border-radius:10px;background:rgba(232,99,42,.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+  .cap .ic svg{width:21px;height:21px;stroke:var(--orange);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .cap h3{font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:7px}
+  .cap p{font-size:.88rem;color:#54586b}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .stat{background:var(--navy-900);padding:32px 24px;text-align:center}
+  .stat .n{font-family:'Archivo',sans-serif;font-weight:900;font-size:2.6rem;color:var(--orange);line-height:1;letter-spacing:-.03em}
+  .stat .l{margin-top:10px;font-size:.84rem;color:var(--slate-light)}
+
+  /* cta */
+  .cta{background:linear-gradient(135deg,var(--orange),var(--orange-soft));color:var(--ink);text-align:center}
+  .cta h2{font-size:clamp(1.8rem,4.4vw,2.8rem);font-weight:900;color:var(--ink);max-width:18ch;margin:0 auto}
+  .cta p{margin:16px auto 0;max-width:48ch;color:rgba(14,15,38,.78);font-size:1.06rem}
+  .cta .btns{margin-top:28px;display:flex;gap:13px;justify-content:center;flex-wrap:wrap}
+  .cta .btn.solid{background:var(--ink);color:#fff}.cta .btn.solid:hover{background:var(--navy-800)}
+  .cta .btn.line{border:2px solid var(--ink);color:var(--ink)}.cta .btn.line:hover{background:rgba(14,15,38,.08)}
+  .cta .fine{margin-top:24px;font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.08em;color:rgba(14,15,38,.7)}
+
+  /* footer */
+  .footer{background:var(--ink);padding:54px 0 30px}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:30px;padding-bottom:34px;border-bottom:1px solid var(--line)}
+  .footer p.about{color:var(--slate);font-size:.9rem;max-width:38ch;margin-top:16px}
+  .foot-col h4{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.12em;color:var(--orange);text-transform:uppercase;margin-bottom:14px}
+  .foot-col a,.foot-col span{display:block;color:var(--slate-light);font-size:.9rem;padding:5px 0}
+  .foot-col a:hover{color:#fff}
+  .foot-bot{padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .foot-bot .meta{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--slate);letter-spacing:.06em}
+
+  @media(max-width:880px){
+    .thesis-grid{grid-template-columns:1fr 1fr}.tcol:nth-child(2){border-right:none}.tcol:nth-child(1),.tcol:nth-child(2){border-bottom:1px solid var(--line-dark)}
+    .loop-grid{grid-template-columns:1fr;gap:30px}
+    .cap-grid,.stats{grid-template-columns:1fr 1fr}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .div-row{grid-template-columns:44px 1fr;gap:16px}.div-chev{display:none}
+  }
+  @media(max-width:520px){.thesis-grid{grid-template-columns:1fr}.tcol{border-right:none;border-bottom:1px solid var(--line-dark)}.cap-grid,.stats,.foot-grid{grid-template-columns:1fr}}
+  @media (prefers-reduced-motion:reduce){.cs-lane .run,.ln-fill{animation:none}.ln-fill{width:100%}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-in">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 100 100">
+        <polygon points="50,18 86,52 72,52 50,32 28,52 14,52" fill="#E8632A"/>
+        <polygon points="50,38 74,60 62,60 50,49 38,60 26,60" fill="#8B92A8"/>
+      </svg>
+      <div class="brand-name">FRANKLEE<br><small>GROUP</small></div>
+    </div>
+    <div class="nav-links">
+      <a href="#divisions">Divisions</a>
+      <a href="#loop">Franklee Loop</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#contact" class="nav-cta">Get in touch</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Logistics &amp; supply chain group · South Africa</div>
+    <h1 style="margin-top:18px">We keep your freight moving — and your <span class="ac">margins recovered.</span></h1>
+    <p class="lead">Franklee Group is a logistics and supply chain group spanning warehousing, consultancy, fleet services and a backhaul exchange. One partner across the whole working life of a load.</p>
+    <div class="hero-cta">
+      <a href="#divisions" class="btn solid">Explore our divisions</a>
+      <a href="#contact" class="btn line">Talk to us</a>
+    </div>
+    <div class="corridor-strip">
+      <span class="cs-label">GAUTENG</span>
+      <span class="cs-node">●</span>
+      <div class="cs-lane"><div class="run"></div></div>
+      <span class="cs-node">●</span>
+      <span class="cs-label">DURBAN · CAPE TOWN · NATIONAL</span>
+    </div>
+  </div>
+</header>
+
+<!-- THESIS -->
+<section class="light">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">One group, end to end</div>
+      <h2>Four divisions covering every kilometre your fleet runs.</h2>
+      <p>From the wash bay to the warehouse to the boardroom — and the empty leg home. Each division makes a different part of your supply chain work harder.</p>
+    </div>
+    <div class="thesis-grid">
+      <div class="tcol"><div class="st">CLEAN</div><h3>Truck Wash</h3><p>Fleet ready and compliant before it hits the road.</p></div>
+      <div class="tcol"><div class="st">MOVE &amp; STORE</div><h3>Logistics &amp; Warehouse</h3><p>Goods distributed, handled and stored on time.</p></div>
+      <div class="tcol"><div class="st">OPTIMISE</div><h3>Consultancy</h3><p>The margin hiding in your network, found and freed.</p></div>
+      <div class="tcol"><div class="st">RECOVER</div><h3>Franklee Loop</h3><p>Empty return legs filled with paying loads.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVISIONS -->
+<section class="ink" id="divisions">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">What we do</div>
+      <h2>The divisions</h2>
+      <p>Standalone services that work even harder together. Engage one, or hand us the whole chain.</p>
+    </div>
+
+    <div class="div-row">
+      <div class="div-num">01</div>
+      <div class="div-main">
+        <h3>Truck Wash</h3>
+        <p>Professional fleet washing and wash-bay services. Clean, presentable vehicles that protect your brand on the road and keep you on the right side of hygiene and compliance.</p>
+        <div class="div-tags"><span>Fleet washing</span><span>Wash bays</span><span>Tanker &amp; reefer cleaning</span><span>Compliance hygiene</span></div>
+      </div>
+      <div class="div-chev">›</div>
+    </div>
+
+    <div class="div-row">
+      <div class="div-num">02</div>
+      <div class="div-main">
+        <h3>Logistics &amp; Warehousing</h3>
+        <p>National distribution, inter-branch movements, storage and handling. Route-to-market execution that gets the pallet in and the pallet out — on time, intact, accounted for.</p>
+        <div class="div-tags"><span>National distribution</span><span>Warehousing &amp; storage</span><span>Inter-branch</span><span>Route-to-market</span></div>
+      </div>
+      <div class="div-chev">›</div>
+    </div>
+
+    <div class="div-row">
+      <div class="div-num">03</div>
+      <div class="div-main">
+        <h3>Supply Chain Consultancy</h3>
+        <p>Network design, route optimisation, TMS/WMS integration and cost-to-serve analysis. We map your operation, find where the margin leaks, and engineer it back in.</p>
+        <div class="div-tags"><span>Network design</span><span>Route optimisation</span><span>TMS/WMS integration</span><span>Cost-to-serve</span></div>
+      </div>
+      <div class="div-chev">›</div>
+    </div>
+
+    <div class="div-row">
+      <div class="div-num">04</div>
+      <div class="div-main">
+        <h3>Franklee Loop <span class="pill">NEW · BACKHAUL EXCHANGE</span></h3>
+        <p>We fill empty return legs with paying loads on corridors you already run — turning deadhead kilometres into recovered revenue. A leg that lost money now earns it.</p>
+        <div class="div-tags"><span>Backhaul matching</span><span>Empty-mile recovery</span><span>Corridor liquidity</span></div>
+        <a href="#loop" class="div-link">Explore Franklee Loop →</a>
+      </div>
+      <div class="div-chev">›</div>
+    </div>
+  </div>
+</section>
+
+<!-- LOOP FEATURE -->
+<section class="navy" id="loop">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Franklee Loop · Backhaul Exchange</div>
+      <h2>Close the loop on every empty kilometre.</h2>
+      <p>Long-haul fleets burn fuel, drivers and tyres running empty on the return leg. Loop matches that idle capacity to loads heading the right way — recovered revenue on a trip you're already making.</p>
+    </div>
+    <div class="loop-grid">
+      <div class="loop-vis">
+        <div class="loop-lane">
+          <div class="ln-node"><div class="ring">GP</div><div class="c">JOHANNESBURG</div></div>
+          <div class="ln-tracks">
+            <div class="ln-track ln-out"><span class="lab">OUTBOUND · LOADED</span></div>
+            <div class="ln-track ln-back"><span class="lab">RETURN · EMPTY</span><div class="ln-fill"></div></div>
+          </div>
+          <div class="ln-node"><div class="ring">DBN</div><div class="c">DURBAN</div></div>
+        </div>
+        <div class="loop-econ">
+          <div class="e"><div class="n">−67%</div><div class="l">cut in deadhead cost per matched leg</div></div>
+          <div class="e"><div class="n">R7.8k</div><div class="l">recovered on a single empty return</div></div>
+          <div class="e"><div class="n">10%</div><div class="l">fee — on matched loads only</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="loop-steps">
+          <div class="s"><span class="i">01</span><p>Carriers post the leg that's about to run empty — lane, date, capacity.</p></div>
+          <div class="s"><span class="i">02</span><p>Shippers post loads that need to move the same direction.</p></div>
+          <div class="s"><span class="i">03</span><p>Loop matches and prices the leg at a backhaul rate both sides win on.</p></div>
+          <div class="s"><span class="i">04</span><p>The load moves, the carrier recovers revenue, Franklee takes a small cut.</p></div>
+        </div>
+        <div class="hero-cta" style="margin-top:30px">
+          <a href="#contact" class="btn solid">Join the carrier pilot</a>
+          <a href="#contact" class="btn line">Post a load</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="light" id="capabilities">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow">Why Franklee</div>
+      <h2>Operators first. Consultants second.</h2>
+      <p>We've run the routes, integrated the systems and felt the cost pressure ourselves. That's the difference between advice and execution.</p>
+    </div>
+    <div class="cap-grid">
+      <div class="cap"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg></div><h3>Corridor depth</h3><p>Hard-won knowledge of South Africa's key freight lanes and where they break.</p></div>
+      <div class="cap"><div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><h3>Systems integration</h3><p>TMS and WMS that actually talk to each other and to your people.</p></div>
+      <div class="cap"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div><h3>Cost discipline</h3><p>We hunt the margin leaks — empty legs, dead stock, broken routes.</p></div>
+      <div class="cap"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg></div><h3>End to end</h3><p>One accountable partner from the wash bay to the warehouse to the route.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="navy">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="n">4</div><div class="l">divisions under one group</div></div>
+      <div class="stat"><div class="n">5+</div><div class="l">national corridors served</div></div>
+      <div class="stat"><div class="n">GP</div><div class="l">Gauteng-anchored, nationally connected</div></div>
+      <div class="stat"><div class="n">−67%</div><div class="l">deadhead cut on matched legs</div></div>
+    </div>
+    <p style="margin-top:16px;font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--slate);text-align:center">Figures illustrative — replace with your verified operating numbers.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <div class="wrap">
+    <h2>Let's move your supply chain forward.</h2>
+    <p>Whether you need a clean fleet, a tighter network, warehouse capacity or backhaul revenue — start with one conversation.</p>
+    <div class="btns">
+      <a class="btn solid" href="https://wa.me/27XXXXXXXXX?text=Hi%20Franklee%20Group">Chat on WhatsApp</a>
+      <a class="btn line" href="mailto:hello@franklee.co.za?subject=Enquiry%20%E2%80%94%20Franklee%20Group">Email us</a>
+    </div>
+    <div class="fine">CONTACT · [YOUR NAME] · [WHATSAPP NUMBER] · [EMAIL] · GAUTENG, SOUTH AFRICA</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand">
+          <svg class="mark" viewBox="0 0 100 100">
+            <polygon points="50,18 86,52 72,52 50,32 28,52 14,52" fill="#E8632A"/>
+            <polygon points="50,38 74,60 62,60 50,49 38,60 26,60" fill="#8B92A8"/>
+          </svg>
+          <div class="brand-name">FRANKLEE<br><small>GROUP</small></div>
+        </div>
+        <p class="about">A South African logistics and supply chain group — keeping freight moving and margins recovered, end to end.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Divisions</h4>
+        <a href="#divisions">Truck Wash</a>
+        <a href="#divisions">Logistics &amp; Warehousing</a>
+        <a href="#divisions">Supply Chain Consultancy</a>
+        <a href="#loop">Franklee Loop · Backhaul</a>
+      </div>
+      <div class="foot-col">
+        <h4>Get in touch</h4>
+        <a href="https://wa.me/27XXXXXXXXX">WhatsApp</a>
+        <a href="mailto:hello@franklee.co.za">hello@franklee.co.za</a>
+        <span>Gauteng, South Africa</span>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <div class="meta">© 2026 FRANKLEE GROUP · ALL RIGHTS RESERVED</div>
+      <div class="meta">LOGISTICS · WAREHOUSING · CONSULTANCY · BACKHAUL</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
