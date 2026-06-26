@@ -42,7 +42,7 @@ A digital marketplace matching Shippers (loads to move) with verified Drivers vi
 ---
 
 ## Contact
-Email: skhumbuzomadiba@gmail.com
+Email: Stanleymasala@gmail.com
 Location: Gauteng, South Africa
 
 ---
